@@ -14,26 +14,6 @@ export class AuthService {
         private readonly jwtService: JwtService,
     ) {}
 
-    // async login(id: string, password: string): Promise<string> {
-    //     const user = await this.userRepository.findOne({ where: { id } });
-    //     console.log('User found:', user);
-
-    //     if (!user) {
-    //         throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
-    //     }
-
-    //     const isPasswordValid = await bcrypt.compare(password, user.password);
-    //     if (!isPasswordValid) {
-    //         throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
-    //     }
-
-    //     if (!process.env.JWT_SECRET) {
-    //         throw new Error('JWT_SECRET is not defined');
-    //     }
-
-    //     const token = this.jwtService.sign({ id: user.user_id });
-    //     return token;
-    // }
     async login(id: string, password: string) {
         
         if (!process.env.JWT_SECRET) {
@@ -54,8 +34,14 @@ export class AuthService {
             throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
         }
     
-        const token = this.jwtService.sign({ id: user.user_id });
+        // JWT 토큰에 사용자 정보를 추가
+        const token = this.jwtService.sign({
+            user_id: user.user_id,
+            user_name: user.user_name,
+            id: user.id,
+            user_role: user.user_role,
+        });
+    
         return token;
     }
-    
 }
