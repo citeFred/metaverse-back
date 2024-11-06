@@ -7,7 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { RolesGuard } from './roles.guard';
 import { UsersModule } from '../user/users.module';
-import { OwnershipGuard } from './ownership.guard';
+// import { OwnershipGuard } from './ownership.guard';
 import { CoursesModule } from '../course/courses/courses.module';
 import { ProjectsModule } from '../project/projects/projects.module';
 import { ExhibitionModule } from '../exhibition/exhibitions/exhibitions.module';
@@ -16,9 +16,11 @@ import { CourseDocModule } from '../course/course_doc/course_doc.module';
 import { DocNameModule } from '../course/doc_name/doc_name.module';
 import { ProjectDocModule } from '../project/project_doc/project_doc.module';
 import { FeedbackModule } from '../project/feedback/feedback.module';
+import { PassportModule } from '@nestjs/passport';
 @Global()
 @Module({
     imports: [
+        PassportModule.register({ defaultStrategy: 'jwt' }),
         UsersModule, CoursesModule, ProjectsModule, ExhibitionModule,
         ExhibitionsDocModule, CourseDocModule, DocNameModule, ProjectDocModule, FeedbackModule,
         TypeOrmModule.forFeature([User]),
@@ -31,10 +33,11 @@ import { FeedbackModule } from '../project/feedback/feedback.module';
         AuthService,
         JwtStrategy,
         RolesGuard,
-        OwnershipGuard,
+        // OwnershipGuard,
         
     ],
     controllers: [AuthController],
-    exports: [AuthService,RolesGuard,OwnershipGuard],
+    // exports: [AuthService,RolesGuard,OwnershipGuard],
+    exports: [AuthService,RolesGuard],
 })
 export class AuthModule {}

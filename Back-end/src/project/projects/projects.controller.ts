@@ -5,15 +5,16 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 import { Project } from './entities/project.entity';
 import { RolesGuard } from '../../auth/roles.guard'; // 역할 기반 가드 임포트
 import { Roles } from '../../auth/roles.decorator'; // 역할 데코레이터 임포트
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+// import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { ApprovedStudentGuard } from '../../auth/project.approved.guard';
-@UseGuards(JwtAuthGuard,RolesGuard)
+import { AuthGuard } from '@nestjs/passport';
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller('projects')
 export class ProjectsController {
     constructor(private readonly projectsService: ProjectsService) {}
  
     @Post('register')
-    @Roles('admin','instructor')
+    // @Roles('admin','instructor')
     async create(@Body() createProjectDto: CreateProjectDto): Promise<{ message: string; data: Project }> {
         const data = await this.projectsService.create(createProjectDto);
         return {
@@ -28,7 +29,7 @@ export class ProjectsController {
     }
 
     @Patch(':id/update')
-    @Roles('instructor','admin','student')
+    // @Roles('instructor','admin','student')
     @UseGuards(ApprovedStudentGuard)
     async update(@Param('id',ParseIntPipe) id: number, @Body() updateProjectDto: UpdateProjectDto, @Request() req) {
         const loginedUser = req.user.user_id;
@@ -40,7 +41,7 @@ export class ProjectsController {
     }
 
     @Delete(':id/delete')
-    @Roles('admin', 'instructor')
+    // @Roles('admin', 'instructor')
     async remove(@Param('id', ParseIntPipe) id: number): Promise<{ message: string; data: any; }> {
         const data = await this.projectsService.remove(id);
     return {

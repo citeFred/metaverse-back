@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Request } from '@nestjs/common';
+import { Controller, UseGuards, Request, Logger } from '@nestjs/common';
 import { ExhibitionService } from './exhibitions.service';
 import { CreateExhibitionDto } from './dto/create-exhibition.dto';
 import { Exhibition } from './exhibition.entity';
@@ -8,28 +8,34 @@ import { UseInterceptors, UploadedFile } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { RolesGuard } from '../../auth/roles.guard';
 import { Roles } from '../../auth/roles.decorator';
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { Role } from 'src/enums/role.enum';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from 'src/user/user.entity';
 
-@UseGuards(JwtAuthGuard,RolesGuard)
 @Controller('exhibitions')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 export class ExhibitionController {
+    private readonly logger = new Logger(ExhibitionController.name);
+
     constructor(private readonly exhibitionService: ExhibitionService) {}
 
     @Post('register')
-    @Roles('admin')
+    @Roles(Role.ADMIN)
     @UseInterceptors(FileInterceptor('file')) // 'file'은 전송할 파일의 필드 이름입니다.
     async create(
-        // @Request() req,
         @Body() createExhibitionDto: CreateExhibitionDto,
+        @GetUser() logginedUser: User,
         @UploadedFile() file: Express.Multer.File // 파일을 인자로 받음
     ): Promise<{ message: string; exhibition_id: number }> {
-        // createExhibitionDto.user_id = req.user.id;
-        const exhibition = await this.exhibitionService.create(createExhibitionDto, file);
-        return { message: '등록이 완료되었습니다', exhibition_id: exhibition.exhibition_id }; // exhibition_id 포함
+        this.logger.verbose(`User ${logginedUser.user_name} creating a new Exhibition. Data: ${JSON.stringify(createExhibitionDto)}`);
+        const newExhibition = await this.exhibitionService.create(createExhibitionDto, logginedUser, file);
+        this.logger.verbose(`newExhibition created successfully: ${JSON.stringify(newExhibition)}`);
+        return { message: '등록이 완료되었습니다', exhibition_id: newExhibition.exhibition_id }; // exhibition_id 포함
     }
 
     // 모든 전시 조회
-    @Roles('admin')
+    @Roles(Role.ADMIN)
     @Get()
     async findAll(): Promise<{ message: string; exhibitions: Exhibition[] }> {
         const exhibitions = await this.exhibitionService.findAll();
@@ -38,7 +44,7 @@ export class ExhibitionController {
 
     // 특정 전시 조회
     @Get(':id')
-    @Roles('admin')
+    @Roles(Role.ADMIN)
     async findOne(@Param('id') id: number): Promise<{ message: string; exhibition: Exhibition }> {
         const exhibition = await this.exhibitionService.findOne(id);
         return { message: '전시 조회를 완료했습니다.', exhibition };
@@ -99,7 +105,7 @@ export class ExhibitionController {
         return { message: '전시가 삭제되었습니다.' };
     }
 
-    @Roles('admin')
+    @Roles(Role.ADMIN)
     @Get('presigned-url/:exhibition_id')
     async getPresignedUrl(
         @Param('exhibition_id') exhibitionId: number

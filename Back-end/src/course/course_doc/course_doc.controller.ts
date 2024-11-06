@@ -3,10 +3,13 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CourseDocService } from './course_doc.service';
 import { CreateCourseDocDto } from './dto/create-course_doc.dto';
 import { Response } from 'express';
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+// import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { RolesGuard } from '../../auth/roles.guard';
+import { AuthGuard } from '@nestjs/passport';
 
-@UseGuards(JwtAuthGuard,RolesGuard)
+// @UseGuards(JwtAuthGuard,RolesGuard)
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+
 @Controller('courses/:courseId/docNames/:topicId/courseDocs')
 export class CourseDocController {
     constructor(private readonly courseDocService: CourseDocService) {}

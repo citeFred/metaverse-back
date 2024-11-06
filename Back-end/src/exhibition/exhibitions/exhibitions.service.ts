@@ -1,4 +1,4 @@
-import { Injectable,ConflictException,BadRequestException,NotFoundException,InternalServerErrorException} from '@nestjs/common';
+import { Injectable,ConflictException,BadRequestException,NotFoundException,InternalServerErrorException, Logger} from '@nestjs/common';
 import { Exhibition } from './exhibition.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository,Not } from 'typeorm';
@@ -8,10 +8,13 @@ import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3
 import { v4 as uuidv4 } from 'uuid';
 import * as dotenv from 'dotenv';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { User } from 'src/user/user.entity';
 
 dotenv.config(); // .env 파일 로드
 @Injectable()
 export class ExhibitionService {
+    private readonly logger = new Logger(ExhibitionService.name);
+
         private s3: S3Client;
         constructor(
             @InjectRepository(Exhibition)
@@ -37,7 +40,9 @@ export class ExhibitionService {
              });
            }
 
-        async create(createExhibitionDto: CreateExhibitionDto, file: Express.Multer.File): Promise<Exhibition> {
+        async create(createExhibitionDto: CreateExhibitionDto, logginedUser: User, file: Express.Multer.File): Promise<Exhibition> {
+            this.logger.verbose(`User ${logginedUser.user_name} is creating a new Article with title: ${createExhibitionDto.exhibition_title}`);
+
             const existingExhibition = await this.exhibitionsRepository.findOne({
                 where: { exhibition_title: createExhibitionDto.exhibition_title },
             });
@@ -66,13 +71,17 @@ export class ExhibitionService {
             }
         
             // 전시회 객체 생성
-            const exhibition = this.exhibitionsRepository.create({
+            const newExhibition = this.exhibitionsRepository.create({
                 ...createExhibitionDto,
                 exhibition_date: new Date(), // 현재 날짜를 자동으로 설정
                 file_path: filePath, // 파일 경로 저장
             });
 
-            return await this.exhibitionsRepository.save(exhibition);
+            const savedExhibition = await this.exhibitionsRepository.save(newExhibition)
+            this.logger.verbose(`Exhibition created successfully: ${JSON.stringify(savedExhibition)}`);
+            this.logger.debug(`Exhibition details: ${JSON.stringify(savedExhibition)}`);
+
+            return savedExhibition;
         }
 
         async findAll(): Promise<Exhibition[]> {

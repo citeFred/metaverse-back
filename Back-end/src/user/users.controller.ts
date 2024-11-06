@@ -3,8 +3,12 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './user.entity';
 import { Response } from 'express';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { OwnershipGuard } from '../auth/ownership.guard';
+// import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+// import { OwnershipGuard } from '../auth/ownership.guard';
+import { RolesGuard } from 'src/auth/roles.guard';
+import { AuthGuard } from '@nestjs/passport';
+
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 
 @Controller('users')
 export class UsersController {
@@ -39,14 +43,14 @@ export class UsersController {
     }
 
     @Delete(':id')
-    @UseGuards(JwtAuthGuard,OwnershipGuard)
+    // @UseGuards(OwnershipGuard)
     async remove(@Param('id') id: number): Promise<{ message: string }> {
         await this.usersService.remove(id);
         return { message: '사용자가 삭제되었습니다.' };
     }
 
     @Put(':id')
-    @UseGuards(JwtAuthGuard,OwnershipGuard)
+    // @UseGuards(JwtAuthGuard,OwnershipGuard)
     async update(
         @Param('userid') userId: number,
         @Body() body: { email: string; password?: string; nick_name: string;}
@@ -63,7 +67,7 @@ export class UsersController {
     }
 
     @Post('logout')
-    @UseGuards(JwtAuthGuard,OwnershipGuard)
+    // @UseGuards(JwtAuthGuard,OwnershipGuard)
     async logout(@Req() request: Request, @Res() response: Response) {
       // JWT 토큰을 담고 있는 쿠키를 삭제
       response.clearCookie('token'); // 'token'은 쿠키의 이름입니다.

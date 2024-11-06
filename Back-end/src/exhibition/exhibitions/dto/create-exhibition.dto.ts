@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, IsArray } from 'class-validator';
 
 export class CreateExhibitionDto {
     @IsString()
@@ -16,6 +16,8 @@ export class CreateExhibitionDto {
     @IsString()
     description: string;
 
-    // @IsNotEmpty()
-    // user_id:number;
+    // 소개 멘트 배열
+    @IsArray()
+    @IsString({ each: true })
+    introductions: string[];
 }

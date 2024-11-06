@@ -18,8 +18,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         });
     }
 
-    async validate(payload: any): Promise<User> {
-        const user = await this.userRepository.findOne({ where: { user_id: payload.id } }); // user_id에 맞게 수정
+    async validate(payload) {
+        const { user_id } = payload;
+
+        const user: User = await this.userRepository.findOne({ where: { user_id } }); // user_id에 맞게 수정
         if (!user) {
             throw new UnauthorizedException(); // 사용자 미존재 에러
         }

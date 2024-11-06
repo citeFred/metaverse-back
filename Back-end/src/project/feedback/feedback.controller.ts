@@ -3,18 +3,20 @@ import { FeedbackService } from './feedback.service';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { UpdateFeedbackDto } from './dto/update-feedback.dto';
 import { Feedback } from './entities/feedback.entity';
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+// import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { RolesGuard } from '../../auth/roles.guard';
 import { Roles } from '../../auth/roles.decorator';
 import { ApprovedStudentGuard } from '../../auth/project.approved.guard';
 
-@UseGuards(JwtAuthGuard, RolesGuard, ApprovedStudentGuard)
+// @UseGuards(JwtAuthGuard, RolesGuard, ApprovedStudentGuard)
+import { AuthGuard } from '@nestjs/passport';
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller('projects/:project/projectDocs/:projectDoc/feedback')
 export class FeedbackController {
     constructor(private readonly feedbackService: FeedbackService) {}
 
     @Post('register')
-    @Roles('instructor')
+    // @Roles('instructor')
     async create(
         @Body() createFeedbackDto: CreateFeedbackDto,
         @Param('project') projectId: number,
@@ -41,7 +43,7 @@ export class FeedbackController {
     }
 
     @Patch(':id/update')
-    @Roles('instructor')
+    // @Roles('instructor')
     async update(
         @Param('id') id: number, 
         @Body() updateFeedbackDto: UpdateFeedbackDto,
@@ -52,7 +54,7 @@ export class FeedbackController {
     }
 
     @Delete(':id/delete')
-    @Roles('instructor')
+    // @Roles('instructor')
     async remove(
         @Param('id') id: number,
         @Param('project') projectId: number,

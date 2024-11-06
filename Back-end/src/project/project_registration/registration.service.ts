@@ -63,7 +63,7 @@ export class ProjectRegistrationService {
         return info.map(registration => ({
             projectRegistration: registration,
             userName: registration.user.user_name,
-            userId: registration.user.id,
+            userId: registration.user.email,
             projectTopic: registration.project.topic,
         }));
     }

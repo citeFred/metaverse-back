@@ -6,10 +6,12 @@ import { UseInterceptors } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { RolesGuard } from '../../auth/roles.guard';
 import { Roles } from '../../auth/roles.decorator';
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+// import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { UpdateExhibitionMemberDto } from './dto/update-exhibitions_member.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 // @UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller('exhibition-members')
 export class ExhibitionsMemberController {
     constructor(private readonly exhibitionsMemberService: ExhibitionsMemberService) {}

@@ -2,18 +2,19 @@ import { Controller, Post, Get, Patch, Delete, Param, Body, UseGuards, Request }
 import { CoursesService } from './courses.service';
 import { RolesGuard } from '../../auth/roles.guard';
 import { Roles } from '../../auth/roles.decorator';
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+// import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { ApprovedInstructorGuard } from '../../auth/course.approved.guard';
-import { OwnershipGuard } from '../../auth/ownership.guard';
+// import { OwnershipGuard } from '../../auth/ownership.guard';
 // import { CreateCourseDto } from './dto/create-course.dto';
 
-@UseGuards(JwtAuthGuard,RolesGuard)
+import { AuthGuard } from '@nestjs/passport';
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller('courses')
 export class CoursesController {
     constructor(private readonly coursesService: CoursesService) {}
 
     @Post('register')
-    @Roles('admin')
+    // @Roles('admin')
     async create(
       @Body() CreateCourseDto: any,
     ) {
@@ -25,7 +26,7 @@ export class CoursesController {
     }
 
     @Get()
-    @Roles('student','instructor','admin')
+    // @Roles('student','instructor','admin')
     async findAll() {
         const data = await this.coursesService.findAll();
         return {
@@ -35,7 +36,7 @@ export class CoursesController {
     }
 
     @Get(':id/read')
-    @Roles('student','instructor','admin')
+    // @Roles('student','instructor','admin')
     async findOne(
       @Param('id') id: number
     ) {
@@ -47,9 +48,9 @@ export class CoursesController {
     }
 
     @Patch(':type/:id/update')
-    @Roles('admin','instructor')
+    // @Roles('admin','instructor')
     //@UseGuards(OwnershipGuard, ApprovedInstructorGuard)
-    @UseGuards(OwnershipGuard)
+    // @UseGuards(OwnershipGuard)
     async update(
       @Param('id') id: number, 
       @Body() updateCourseDto: any,
@@ -64,8 +65,8 @@ export class CoursesController {
     }
 
     @Delete(':type/:id/delete')
-    @UseGuards(OwnershipGuard)
-    @Roles('admin')
+    // @UseGuards(OwnershipGuard)
+    // @Roles('admin')
     async remove(
       @Param('id') id: number
     ) {

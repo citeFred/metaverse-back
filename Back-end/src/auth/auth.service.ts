@@ -1,47 +1,66 @@
 // auth.service.ts (수정된 부분)
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../user/user.entity'; 
 import * as bcrypt from 'bcrypt';
+import { LogInRequestDto } from './dto/log-in-request.dto';
+import { UsersService } from 'src/user/users.service';
 
 @Injectable()
 export class AuthService {
+    private readonly logger = new Logger(AuthService.name);
+
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
         private readonly jwtService: JwtService,
+        private userService: UsersService,
     ) {}
 
-    async login(id: string, password: string) {
-        
-        if (!process.env.JWT_SECRET) {
-            throw new Error('JWT_SECRET is not defined');
+    // 로그인
+    async login(logInRequestDto: LogInRequestDto): Promise<{ token: string, user: User }> {
+        const { email, password } = logInRequestDto;
+        this.logger.verbose(`Attempting to sign in user with email: ${email}`);
+
+        try {
+            const existingUser = await this.findUserByEmail(email);
+
+            if (!existingUser || !(await bcrypt.compare(password, existingUser.password))) {
+                this.logger.warn(`Failed login attempt for email: ${email}`);
+                throw new UnauthorizedException('Incorrect email or password.');
+            }
+
+            // [1] JWT 토큰 생성 (Secret + Payload)
+            const token = await this.generateJwtToken(existingUser);
+
+            // [2] 사용자 정보 반환
+            return { token, user: existingUser };
+        } catch (error) {
+            this.logger.error('Signin failed', error.stack);
+            throw error;
         }
+    }
+
+    // 아이디로 유저 찾기 메서드
+    private async findUserByEmail(email: string): Promise<User | undefined> {
+        return await this.userRepository.findOne({ where: { email } });
+    }
+
+    // JWT 생성 공통 메서드
+    async generateJwtToken(user: User): Promise<string> {
         
-        //id값에따른 비밀번호찾기
-        const user = await this.userRepository.findOne({ where: { id } });
-        console.log(user);
-        console.log(id);
-        
-        if (!user) {
-            throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-        }
-    
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (!isPasswordValid) {
-            throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
-        }
-    
-        // JWT 토큰에 사용자 정보를 추가
-        const token = this.jwtService.sign({
-            user_id: user.user_id,
-            user_name: user.user_name,
-            id: user.id,
-            user_role: user.user_role,
-        });
-    
-        return token;
+        // [1] JWT 토큰 생성 (Secret + Payload)
+        const payload = { 
+            username: user.user_name,
+            email: user.email,
+            userId: user.user_id,
+            role: user.user_role,
+            };
+        const accessToken = await this.jwtService.sign(payload);
+        this.logger.debug(`Generated JWT Token: ${accessToken}`);
+        this.logger.debug(`User details: ${JSON.stringify(user)}`);
+        return accessToken;
     }
 }

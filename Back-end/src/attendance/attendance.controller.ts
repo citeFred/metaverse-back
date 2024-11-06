@@ -1,13 +1,14 @@
 import { Controller, Post, Body, UseGuards, Req, Patch, NotFoundException, Param } from '@nestjs/common';
 import { AttendanceService } from './attendance.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+// import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateAttendanceDto } from './dto/create-attendance.dto';
 import { CheckAttendanceDto } from './dto/check-attendance.dto';
 import { UpdateStudentAttendanceDto } from './dto/update-student-attendance.dto';
 import { Attendance } from './entities/attendance.entity';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('attendance')
-@UseGuards(JwtAuthGuard) // JWT 인증 가드 사용
+@UseGuards(AuthGuard('jwt'))
 export class AttendanceController {
     constructor(private readonly attendanceService: AttendanceService) {}
 

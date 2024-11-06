@@ -26,20 +26,12 @@ export class UsersService {
         const existingUser = await this.usersRepository.findOne({
             where: [
                 { email: createUserDto.email },
-                { nick_name: createUserDto.nick_name },
-                { id: createUserDto.id }
             ]
         });
     
         if (existingUser) {
             if (existingUser.email === createUserDto.email) {
                 throw new ConflictException('이미 사용 중인 이메일입니다.');
-            }
-            if (existingUser.nick_name === createUserDto.nick_name) {
-                throw new ConflictException('이미 사용 중인 닉네임입니다.');
-            }
-            if (existingUser.id === createUserDto.id) {
-                throw new ConflictException('이미 사용 중인 ID입니다.');
             }
         }
     

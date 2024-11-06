@@ -7,9 +7,11 @@ import { UseInterceptors, UploadedFile } from '@nestjs/common';
 import { FileFieldsInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { RolesGuard } from '../../auth/roles.guard';
 import { Roles } from '../../auth/roles.decorator';
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { AuthGuard } from '@nestjs/passport';
+// import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
 // @UseGuards(JwtAuthGuard,RolesGuard)
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller('exhibition-docs')
 export class ExhibitionsDocController {
     constructor(private readonly exhibitionDocsService: ExhibitionsDocService) {}
@@ -61,7 +63,7 @@ export class ExhibitionsDocController {
     }
 
     @Put(':id')
-    @Roles('admin')
+    // @Roles('admin')
     async update(
         @Param('id') id: number,
         @Body() updateExhibitionsDocDto: UpdateExhibitionsDocDto,
@@ -71,14 +73,14 @@ export class ExhibitionsDocController {
     } 
   
     @Delete(':id')
-    @Roles('admin')
+    // @Roles('admin')
     async remove(@Param('id') id: number): Promise<{ message: string }> {
         await this.exhibitionDocsService.remove(id);
         return ({ message: '성공적으로 삭제되었습니다.' });
     }
 
     @Get('presigned-url/:exhibition_doc_id')
-    @Roles('admin')
+    // @Roles('admin')
     async getPresignedUrl(
         @Param('exhibition_doc_id') exhibition_doc_id: number
     ): Promise<{ url: string }> {

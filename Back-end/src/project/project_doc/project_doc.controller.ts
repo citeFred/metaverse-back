@@ -5,17 +5,19 @@ import { UpdateProjectDocDto } from './dto/update-project_doc.dto';
 import { ProjectDoc } from './entities/project_doc.entity';
 import { UseInterceptors, UploadedFile } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+// import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { RolesGuard } from '../../auth/roles.guard';
 import { Roles } from '../../auth/roles.decorator';
 import { ApprovedStudentGuard } from '../../auth/project.approved.guard';
-@UseGuards(JwtAuthGuard, RolesGuard, ApprovedStudentGuard)
+// @UseGuards(JwtAuthGuard, RolesGuard, ApprovedStudentGuard)
+import { AuthGuard } from '@nestjs/passport';
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller('projects/:projectId/projectDocs')
 export class ProjectDocController {
     constructor(private readonly projectDocsService: ProjectDocService) {}
 
     @Post('register')
-    @Roles('instructor','student','admin')
+    // @Roles('instructor','student','admin')
     @UseInterceptors(FileInterceptor('file'))  // 'file' 필드에서 파일을 업로드 받음
     async create(
         @Param('projectId') projectId: number,
@@ -43,7 +45,7 @@ export class ProjectDocController {
     }
     
     @Put(':id/update')
-    @Roles('instructor','student','admin')
+    // @Roles('instructor','student','admin')
     async update(
         @Param('id') id: number, 
         @Body() updateProjectDocDto: UpdateProjectDocDto,
@@ -54,7 +56,7 @@ export class ProjectDocController {
     }
 
     @Delete(':id/delete')
-    @Roles('instructor','student','admin')
+    // @Roles('instructor','student','admin')
     async remove(
         @Param('id') id: number,
         @Param('projectId') projectId: number

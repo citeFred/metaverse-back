@@ -4,17 +4,18 @@ import { CreateRequestCourseRegistrationDto } from './dto/create-request-course_
 import { UpdateRequestCourseRegistrationDto } from './dto/update-request-course_registration.dto';
 import { GetAdminResponseCourseRegistrationDto } from './dto/get-admin-course_registration.dto';
 import { CourseRegistration } from './entities/course_registration.entity';
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+// import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { RolesGuard } from '../../auth/roles.guard';
 import { Roles } from '../../auth/roles.decorator';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('courses/:courseId/courseRegistration')
 export class CourseRegistrationController {
     constructor(private readonly courseRegistrationService: CourseRegistrationService) {}
 
-    @UseGuards(JwtAuthGuard, RolesGuard)
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
     @Post('register')
-    @Roles('instructor', 'student','admin')
+    // @Roles('instructor', 'student','admin')
     // 수강 신청
     async create(
         @Body() createRequestCourseRegistrationDto: CreateRequestCourseRegistrationDto,
@@ -34,7 +35,7 @@ export class CourseRegistrationController {
 
     // <admin> 전체 수강 신청 정보 조회
     @Get()
-    @Roles('admin')
+    // @Roles('admin')
     async findAllForAdmin(
         @Param('courseId') course_id: number,
     ): Promise<{ message: string, data: GetAdminResponseCourseRegistrationDto[] }> {
@@ -49,7 +50,7 @@ export class CourseRegistrationController {
 
     // <student,instructor> 개인 수강 신청 상태 조회
     @Get(':id')
-    @Roles('student','instructor')
+    // @Roles('student','instructor')
     async findOne(
         @Param('id') id: number,
         @Param('courseId') courseId: number
@@ -65,7 +66,7 @@ export class CourseRegistrationController {
 
     // 수강 신청 수정
     @Patch(':id/update')
-    @Roles('admin')
+    // @Roles('admin')
     async update(
         @Param('id') id: number, 
         @Body() updateRequestCourseRegistrationDto: UpdateRequestCourseRegistrationDto,
@@ -80,7 +81,7 @@ export class CourseRegistrationController {
 
     // 수강 신청 삭제
     @Delete(':id/delete')
-    @Roles('instructor', 'student')
+    // @Roles('instructor', 'student')
     remove(
         @Param('id') id: number,
         @Param('course') courseId: number

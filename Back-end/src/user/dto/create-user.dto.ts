@@ -6,9 +6,9 @@ export class CreateUserDto {
     @IsNotEmpty()
     user_name: string;
 
-    @IsString()
+    @IsEmail()
     @IsNotEmpty()
-    id: string;
+    email: string;
 
     @IsString()
     @IsNotEmpty()
@@ -17,15 +17,6 @@ export class CreateUserDto {
     @IsString()
     @IsNotEmpty()
     passwordConfirm: string;
-
-    @IsEmail()
-    @IsNotEmpty()
-    email: string;
-
-    
-    @IsString()
-    @IsNotEmpty()
-    nick_name: string;
 
     @IsEnum(Role) // enum 검증 추가
     user_role: Role;

@@ -2,17 +2,18 @@ import { Controller, Get, Post, Patch, Delete, Param, Body, UseGuards, Request }
 import { ProjectRegistrationService } from './registration.service';
 import { CreateProjectRegistrationDto } from './dto/create-registration.dto';
 import { UpdateProjectRegistrationDto } from './dto/update-registration.dto';
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+// import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { RolesGuard } from '../../auth/roles.guard';
 import { Roles } from '../../auth/roles.decorator';
+import { AuthGuard } from '@nestjs/passport';
 
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller('projects/:project/projectRegistration')
 export class ProjectRegistrationController {
     constructor(private readonly projectRegistrationService: ProjectRegistrationService) {}
 
     @Post('register')
-    @Roles('student')
+    // @Roles('student')
     async create(@Body() createProjectRegistrationDto: CreateProjectRegistrationDto, @Request() req, @Param('project') project_id: number) {
         const loginedUser = req.user.user_id;
         const projectId = project_id;
@@ -25,7 +26,7 @@ export class ProjectRegistrationController {
     }
 
     @Get()
-    @Roles('instructor', 'admin')
+    // @Roles('instructor', 'admin')
     async findAll(
         @Param('project') projectId: number,
     ) {
@@ -47,7 +48,7 @@ export class ProjectRegistrationController {
     // }
 
     @Patch(':id')
-    @Roles('instructor','admin')
+    // @Roles('instructor','admin')
     async update(
         @Param('id') id: number, 
         @Body() updateProjectRegistrationDto: UpdateProjectRegistrationDto, 
@@ -61,7 +62,7 @@ export class ProjectRegistrationController {
 
     // 프로젝트 참가 신청을 삭제
     @Delete(':id')
-    @Roles('student')
+    // @Roles('student')
     async remove(@Param('id') id: number, @Param('project') projectId: number) {
         await this.projectRegistrationService.remove(id, projectId);
         return {
