@@ -37,23 +37,13 @@ import { CourseRegistrationModule } from './course/course_registration/course_re
 import { CourseRegistration } from './course/course_registration/entities/course_registration.entity';
 import { AttendanceModule } from './attendance/attendance.module';
 import { Attendance } from './attendance/entities/attendance.entity';
+import { typeOrmConfig } from './configs/typeorm.config';
 
 @Module({
     imports: [
         ConfigModule.forRoot(), // ConfigModule 추가
-        TypeOrmModule.forRootAsync({
-            useFactory: () => ({
-                type: process.env.DB_TYPE as 'mysql',
-                host: process.env.DB_HOST,
-                port: parseInt(process.env.DB_PORT, 10),
-                username: process.env.DB_USERNAME,
-                password: process.env.DB_PASSWORD,
-                database: process.env.DB_DATABASE,
-                entities: [User,Exhibition,ExhibitionDoc,ExhibitionMember,ExhibitionIntro,
-                    Project,ProjectDoc, ProjectRegistration, Feedback, Course, DocName, CourseDoc, VideoTopic, CourseRegistration, Video, Attendance],
-                synchronize: true,
-            }),
-        }),
+        TypeOrmModule.forRoot(typeOrmConfig),
+
         // ServeStaticModule.forRoot({
         //     rootPath: join(__dirname, '..', 'public'),
         // }),
