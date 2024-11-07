@@ -127,13 +127,7 @@ export class CourseDocService {
                     ContentLength: data.ContentLength,
                 }
             };
-            // const stream = data.Body as Readable;
-            // return stream
-            // const chunks: Buffer[] = [];
-            // for await (const chunk of stream) {
-            //     chunks.push(Buffer.from(chunk));
-            // }
-            // return Buffer.concat(chunks);
+
         } catch (error) {
             console.error('파일 다운로드 중 오류 발생:', error);
             throw new InternalServerErrorException('파일 다운로드에 실패했습니다.');
@@ -190,17 +184,6 @@ export class CourseDocService {
   
         return doc;
     }
-    // async update(courseTitle: string, docNameTitle: string, id: number, file?: Express.Multer.File): Promise<CourseDoc> {
-    //     const courseDoc = await this.findOne(courseTitle, docNameTitle, id);
-
-    //     Object.assign(courseDoc);
-
-    //     if (file) {
-    //         courseDoc.file_path = file.path;
-    //     }
-
-    //     return await this.courseDocRepository.save(courseDoc);
-    // }
 
     async remove(
         courseId: number, 

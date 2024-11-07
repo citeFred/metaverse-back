@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { CreateExhibitionsMembersDto } from './dto/create-exhibitions_member.dto';
 import { ExhibitionMember } from './entities/exhibition_member.entity';
-import { Exhibition } from '../exhibitions/exhibition.entity';
+import { Exhibition } from '../exhibitions/entities/exhibition.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ExhibitionService } from '../exhibitions/exhibitions.service';

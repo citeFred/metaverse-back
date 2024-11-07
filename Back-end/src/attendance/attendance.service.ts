@@ -2,12 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Attendance } from './entities/attendance.entity';
-import { CreateAttendanceDto } from './dto/create-attendance.dto';
 import { UpdateStudentAttendanceDto } from './dto/update-student-attendance.dto';
 import { User } from '../user/user.entity'; // User 엔티티 임포트
 import { Course } from '../course/courses/entities/course.entity'; // Course 엔티티 임포트
 import { CourseRegistration } from '../course/course_registration/entities/course_registration.entity'; // CourseRegistration 엔티티 임포트
-import { Registration } from 'src/enums/role.enum';
+import { CourseRegistrationStatus } from 'src/enums/course-registration-status.enum';
 
 @Injectable()
 export class AttendanceService {
@@ -44,31 +43,6 @@ export class AttendanceService {
         // 출석 기록 저장
         return this.attendanceRepository.save(attendance);
     }
-
-    // // 출석 기록 조회
-    // async findAttendance(courseId: number, userId: number): Promise<Attendance> {
-    //     const attendance = await this.attendanceRepository.findOne({
-    //         where: { course: { course_id: courseId }, user: { user_id: userId } },
-    //     });
-
-    //     if (!attendance) {
-    //         throw new NotFoundException('Attendance record not found');
-    //     }
-
-    //     return attendance;
-    // }
-
-    // // 출석 상태 업데이트
-    // async updateAttendanceStatus(attendanceId: number, newField: 'present' | 'absent' | 'late'): Promise<Attendance> {
-    //     const attendance = await this.attendanceRepository.findOne({ where: { attendance_id: attendanceId } });
-
-    //     if (!attendance) {
-    //         throw new NotFoundException('Attendance record not found');
-    //     }
-
-    //     attendance.field = newField; // 새로운 출석 상태로 변경
-    //     return this.attendanceRepository.save(attendance);
-    // }
 
     async findAttendance(courseId: number, userId: number): Promise<Attendance> {
         const attendance = await this.attendanceRepository.findOne({
@@ -122,7 +96,7 @@ export class AttendanceService {
         const registrations = await this.courseRegistrationRepository.find({
             where: { 
                 course: { course_id: courseId }, 
-                course_registration_status: Registration.APPROVED // 'approved' 상태의 학생만 가져오기
+                course_registration_status: CourseRegistrationStatus.APPROVED // 'approved' 상태의 학생만 가져오기
             },
             relations: ['user'], // 사용자 정보를 가져옵니다.
         });
@@ -136,7 +110,7 @@ export class AttendanceService {
             .createQueryBuilder('registration')
             .leftJoinAndSelect('registration.user', 'user') // 사용자와 조인
             .where('registration.course_id = :courseId', { courseId })
-            .andWhere('registration.course_registration_status = :status', { status: Registration.APPROVED })
+            .andWhere('registration.course_registration_status = :status', { status: CourseRegistrationStatus.APPROVED })
             .getMany(); // 여러 개의 결과 가져오기
     
         // 출석 기록 생성 및 저장

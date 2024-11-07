@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ExhibitionsDocController } from './exhibitions_doc.controller';
 import { ExhibitionsDocService } from './exhibitions_doc.service';
 import { ExhibitionDoc } from './entities/exhibition_doc.entity';
-import { Exhibition } from '../exhibitions/exhibition.entity';
+import { Exhibition } from '../exhibitions/entities/exhibition.entity';
 import { UsersModule } from '../../user/users.module';
 
 @Module({

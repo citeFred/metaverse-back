@@ -19,6 +19,7 @@ export class Project {
         enum: ['in_progress', 'completed'],
         default: 'in_progress',
     })
+    
     project_status: 'in_progress' | 'completed';
 
     @Column({ type: 'varchar', length: 50, nullable: true })

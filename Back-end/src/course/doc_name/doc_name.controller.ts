@@ -1,7 +1,7 @@
 import { Controller, Post, Get, Patch, Delete, Param, Body } from '@nestjs/common';
 import { DocNameService } from './doc_name.service';
-import { CreateDocNameDto } from './dto/create-doc_name.dto'; // CreateDocNameDto 임포트
-import { UpdateDocNameDto } from './dto/update-doc_name.dto'; // UpdateDocNameDto 임포트
+import { CreateDocNameDto } from './dto/create-doc_name.dto';
+import { UpdateDocNameDto } from './dto/update-doc_name.dto';
 
 @Controller('courses/:courseId/docNames')
 export class DocNameController {

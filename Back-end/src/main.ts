@@ -6,7 +6,6 @@ import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
-    // app.enableCors();
     // 유효성 검사 전역 설정
     app.useGlobalPipes(new ValidationPipe({
         exceptionFactory: (errors) => new BadRequestException(errors),

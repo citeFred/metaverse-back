@@ -5,7 +5,7 @@ import { UpdateCourseDto } from './dto/update-course.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CourseRegistration } from '../course_registration/entities/course_registration.entity';
-import { Registration } from '../../enums/role.enum';
+import { CourseRegistrationStatus } from 'src/enums/course-registration-status.enum';
 
 @Injectable()
 export class CoursesService {
@@ -53,7 +53,7 @@ export class CoursesService {
             where: {
                 user: { user_id: loginedUserId }, // 현재 로그인한 사용자 ID
                 course: { course_id: courseId }, // 현재 프로젝트 ID
-                course_registration_status: Registration.APPROVED, // 승인된 상태 확인
+                course_registration_status: CourseRegistrationStatus.APPROVED, // 승인된 상태 확인
             },
         });
         return !!registration;

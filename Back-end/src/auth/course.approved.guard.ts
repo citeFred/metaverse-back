@@ -1,5 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable, ForbiddenException } from '@nestjs/common';
-import { CoursesService } from '../course/courses/courses.service'; // CoursesService를 임포트합니다.
+import { CoursesService } from '../course/courses/courses.service';
 
 @Injectable()
 export class ApprovedInstructorGuard implements CanActivate {

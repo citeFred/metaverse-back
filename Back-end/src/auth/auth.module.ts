@@ -32,7 +32,6 @@ import { FeedbackModule } from '../project/feedback/feedback.module';
         JwtStrategy,
         RolesGuard,
         OwnershipGuard,
-        
     ],
     controllers: [AuthController],
     exports: [AuthService,RolesGuard,OwnershipGuard],

@@ -36,16 +36,6 @@ export class ProjectRegistrationController {
         };
     }
 
-    // @Get('students')
-    // @Roles('instructor', 'admin')
-    // async findStudents(@Param('projectTopic') projectTopic: string) {
-    //     const data = await this.registrationService.findStudentsForProjectRegistration(projectTopic);
-    //     return {
-    //         message: "프로젝트에 신청한 학생들이 조회되었습니다.",
-    //         data: data,
-    //     };
-    // }
-
     @Patch(':id')
     @Roles('instructor','admin')
     async update(

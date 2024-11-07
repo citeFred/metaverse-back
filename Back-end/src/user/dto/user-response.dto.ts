@@ -1,11 +1,11 @@
-import { Role } from '../../enums/role.enum';
+import { UserRole } from '../../enums/user-role.enum';
 import { User } from '../user.entity';
 
 export class UserResponseDto {
     user_name: string;
     id: string;
     email: string;
-    user_role: Role;
+    user_role: UserRole;
 
     constructor(user: User) {
         this.user_name = user.user_name;

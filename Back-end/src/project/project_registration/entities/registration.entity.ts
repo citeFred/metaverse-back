@@ -1,8 +1,8 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from '../../../user/user.entity';
 import { Project } from '../../projects/entities/project.entity';
-import { Registration } from '../../../enums/role.enum';
-import { TeamRole } from '../../../enums/role.enum';
+import { CourseRegistrationStatus } from 'src/enums/course-registration-status.enum';
+import { TeamRole } from 'src/enums/team-role.enum';
 
 @Entity()
 export class ProjectRegistration {
@@ -14,10 +14,10 @@ export class ProjectRegistration {
 
     @Column({
         type: 'enum',
-        enum: Registration,
-        default: Registration.PENDING,
+        enum: CourseRegistrationStatus,
+        default: CourseRegistrationStatus.PENDING,
     })
-    registration_status: Registration;
+    registration_status: CourseRegistrationStatus;
 
     @Column({ type: 'varchar', length: 50, nullable: true })
     project_role: string;

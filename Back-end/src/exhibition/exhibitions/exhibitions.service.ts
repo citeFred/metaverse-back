@@ -1,5 +1,5 @@
 import { Injectable,ConflictException,BadRequestException,NotFoundException,InternalServerErrorException} from '@nestjs/common';
-import { Exhibition } from './exhibition.entity';
+import { Exhibition } from './entities/exhibition.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository,Not } from 'typeorm';
 import { CreateExhibitionDto } from './dto/create-exhibition.dto';

@@ -14,8 +14,6 @@ import { ProjectDocModule } from 'src/project/project_doc/project_doc.module';
 import { FeedbackModule } from 'src/project/feedback/feedback.module';
 dotenv.config();
 
-// ProjectsModule 임포트
-//손정민 작성
  @Module({
     imports: [
         TypeOrmModule.forFeature([User]),

@@ -1,5 +1,5 @@
 import { IsString, IsEmail, IsNotEmpty, IsEnum } from 'class-validator';
-import { Role } from '../../enums/role.enum';
+import { UserRole } from '../../enums/user-role.enum';
 
 export class CreateUserDto {
     @IsString()
@@ -27,8 +27,8 @@ export class CreateUserDto {
     @IsNotEmpty()
     nick_name: string;
 
-    @IsEnum(Role) // enum 검증 추가
-    user_role: Role;
+    @IsEnum(UserRole) // enum 검증 추가
+    user_role: UserRole;
 
     // DTO 내에서 추가 검증 로직 작성
     validatePasswords() {

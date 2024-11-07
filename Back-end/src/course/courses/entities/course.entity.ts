@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany } from 'typeorm';
 import { DocName } from '../../doc_name/entities/doc_name.entity';
-import { VideoTopic } from 'src/course/video_topic/entities/video_topic.entity';
+import { Lesson } from 'src/course/lesson/entities/lesson.entity';
 import { User } from 'src/user/user.entity';
 import { CourseRegistration } from 'src/course/course_registration/entities/course_registration.entity';
 import { Attendance } from 'src/attendance/entities/attendance.entity';
@@ -31,8 +31,8 @@ export class Course {
     @OneToMany(() => DocName, (docname) => docname.course, { cascade: true })
     docName: DocName[];
 
-    @OneToMany(() => VideoTopic, (videoTopic) => videoTopic.course, { cascade: true })
-    videoTopic: VideoTopic[];
+    @OneToMany(() => Lesson, lesson => lesson.course)
+    lessons: Lesson[];
 
     // course - course_registration
     @OneToMany(() => CourseRegistration, (course_registration) => course_registration.course, { cascade: true })
