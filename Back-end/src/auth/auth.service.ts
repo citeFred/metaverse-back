@@ -54,8 +54,12 @@ export class AuthService {
             throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
         }
     
-        const token = this.jwtService.sign({ id: user.user_id });
+        const token = this.jwtService.sign({
+             id: user.user_id,  
+             user_name: user.user_name,
+             email: user.email,
+             user_role: user.user_role,
+            });
         return token;
     }
-    
 }
