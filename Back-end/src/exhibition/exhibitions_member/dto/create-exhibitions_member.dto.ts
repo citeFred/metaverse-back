@@ -16,6 +16,9 @@ export class CreateExhibitionMemberDto {
     @IsString()
     name: string; // name은 단일 문자열
 
+    @IsNotEmpty()
+    generation: string;
+
     @IsOptional()
     image?: Express.Multer.File; // 이 줄은 제거하세요
 }

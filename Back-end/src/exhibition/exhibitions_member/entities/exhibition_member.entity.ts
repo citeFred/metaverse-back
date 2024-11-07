@@ -9,6 +9,9 @@ export class ExhibitionMember {
     @Column()
     name: string;
 
+    @Column()
+    generation: string;
+
     @Column({ nullable: true })
     nick_name?: string;
     
