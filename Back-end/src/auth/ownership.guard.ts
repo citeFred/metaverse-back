@@ -133,13 +133,11 @@ export class OwnershipGuard extends JwtAuthGuard implements CanActivate {
             }
             resourceOwnerId = owner.user_id; 
         }
-
-
+        
         else {
             throw new ForbiddenException('지원하지 않는 리소스 유형입니다.');
         }
         
-
         // 소유권 확인
         if (resourceOwnerId !== user.user_id) {
             throw new ForbiddenException('자신의 리소스만 삭제할 수 있습니다.');

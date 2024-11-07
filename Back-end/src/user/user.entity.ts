@@ -60,4 +60,3 @@ export class User {
     @OneToMany(() => Attendance, attendance => attendance.user)
     attendances: Attendance[];
 }
-

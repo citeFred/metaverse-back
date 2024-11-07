@@ -19,7 +19,6 @@ export class CourseDocController {
         @Body() createCourseDocDto: CreateCourseDocDto,
         @UploadedFile() file: Express.Multer.File
     ) {
-        // const sanitizedDocNameTitle = docNameTitle.replace(/ /g, '');
         const data = await this.courseDocService.uploadFile(courseId, topicId, createCourseDocDto, file);
         return {
             message: "File을 성공적으로 업로드 하셨습니다.",

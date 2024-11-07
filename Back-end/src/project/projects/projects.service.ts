@@ -5,7 +5,6 @@ import { Project } from './entities/project.entity';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ProjectRegistration } from '../project_registration/entities/registration.entity';
-import { User } from 'src/user/user.entity';
 import { CourseRegistrationStatus } from 'src/enums/course-registration-status.enum';
 
 @Injectable()
@@ -14,8 +13,6 @@ export class ProjectsService {
     constructor(
         @InjectRepository(Project)
         private readonly projectsRepository: Repository<Project>,
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
         @InjectRepository(ProjectRegistration)
         private readonly projectRegistrationRepository: Repository<ProjectRegistration>,
     ) {}

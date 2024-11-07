@@ -118,7 +118,6 @@ export class ExhibitionsDocService {
         return exhibitionDocs; // 모든 전시 문서 반환
     }
     
-    
     async findAll(): Promise<ExhibitionDoc[]> {
         return await this.exhibitionsDocRepository.find({
             relations: ['exhibition'],
@@ -143,7 +142,6 @@ export class ExhibitionsDocService {
         return doc;
     }
   
-  
     async update(id: number, updateExhibitionsDocDto: UpdateExhibitionsDocDto): Promise<ExhibitionDoc> {
         const doc = await this.findOne(id);
   
@@ -162,8 +160,7 @@ export class ExhibitionsDocService {
         const doc = await this.findOne(id);
         await this.exhibitionsDocRepository.remove(doc);
     }
-
-
+    
     async streamVideo(
         exhibition_doc_id: number,
         res: Response

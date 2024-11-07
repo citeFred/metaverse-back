@@ -111,7 +111,6 @@ export class DocNameService {
         if (!doc) {
             throw new NotFoundException('자료를 찾을 수 없습니다.');
         }
-  
         return doc;
     }
 }

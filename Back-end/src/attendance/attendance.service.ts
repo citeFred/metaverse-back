@@ -3,9 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Attendance } from './entities/attendance.entity';
 import { UpdateStudentAttendanceDto } from './dto/update-student-attendance.dto';
-import { User } from '../user/user.entity'; // User 엔티티 임포트
-import { Course } from '../course/courses/entities/course.entity'; // Course 엔티티 임포트
-import { CourseRegistration } from '../course/course_registration/entities/course_registration.entity'; // CourseRegistration 엔티티 임포트
+import { User } from '../user/user.entity';
+import { Course } from '../course/courses/entities/course.entity';
+import { CourseRegistration } from '../course/course_registration/entities/course_registration.entity';
 import { CourseRegistrationStatus } from 'src/enums/course-registration-status.enum';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class AttendanceService {
         @InjectRepository(Course)
         private courseRepository: Repository<Course>,
         @InjectRepository(CourseRegistration)
-        private courseRegistrationRepository: Repository<CourseRegistration>, // CourseRegistration 리포지토리 추가
+        private courseRegistrationRepository: Repository<CourseRegistration>,
     ) {}
 
     // 출석 기록 생성

@@ -31,11 +31,11 @@ export class ProjectRegistration {
 
     // project_registration - user
     @ManyToOne(() => User, (user) => user.project_registrations)
-    @JoinColumn({ name: 'user_id' }) // 외래 키 지정
+    @JoinColumn({ name: 'user_id' })
     user: User;
 
     // project_registration - project
     @ManyToOne(() => Project, (project) => project.project_registrations)
-    @JoinColumn({ name: 'project_id' }) // 외래 키 지정
+    @JoinColumn({ name: 'project_id' })
     project: Project;
 }

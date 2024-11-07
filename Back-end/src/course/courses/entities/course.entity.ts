@@ -40,5 +40,4 @@ export class Course {
 
     @OneToMany(() => Attendance, attendance => attendance.course)
     attendances: Attendance[];
-
 }

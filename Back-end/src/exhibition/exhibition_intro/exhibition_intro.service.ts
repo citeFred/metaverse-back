@@ -64,7 +64,6 @@ export class ExhibitionIntroService {
         return exhibitionIntro;
     }
 
-    //id: , 
     async update(updateExhibitionIntroDto: UpdateExhibitionIntroDto): Promise<ExhibitionIntro[]> {
         const exhibitionId = updateExhibitionIntroDto.exhibition_id; // DTO에서 전시 ID 가져오기
         const existingIntros = await this.exhibitionIntroRepository.find({ where: { exhibition: { exhibition_id: exhibitionId } } });

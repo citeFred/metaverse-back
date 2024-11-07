@@ -109,6 +109,4 @@ export class CoursesService {
         await this.coursesRepository.remove(course);
         this.logger.log(`클래스가 삭제되었습니다.`);
     }
-    
-    
 }
