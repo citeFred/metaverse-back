@@ -1,10 +1,10 @@
 import { CourseRegistration } from '../entities/course_registration.entity';
-import { Registration } from '../../../enums/role.enum';
 import { UserResponseDto } from '../../../user/dto/user-response.dto';
 import { CourseResponseDto } from '../../courses/dto/course-response.dto';
+import { CourseRegistrationStatus } from 'src/enums/course-registration-status.enum';
 
 export class GetAdminResponseCourseRegistrationDto {
-    course_registration_status: Registration;
+    course_registration_status: CourseRegistrationStatus;
     course_reporting_date: Date;
     applicant: UserResponseDto;
     currentCourse: CourseResponseDto;

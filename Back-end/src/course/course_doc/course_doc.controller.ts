@@ -19,7 +19,6 @@ export class CourseDocController {
         @Body() createCourseDocDto: CreateCourseDocDto,
         @UploadedFile() file: Express.Multer.File
     ) {
-        // const sanitizedDocNameTitle = docNameTitle.replace(/ /g, '');
         const data = await this.courseDocService.uploadFile(courseId, topicId, createCourseDocDto, file);
         return {
             message: "File을 성공적으로 업로드 하셨습니다.",
@@ -61,19 +60,6 @@ export class CourseDocController {
         }
     }
   
-    // @Get(':id')
-    // async findOne(
-    //     @Param('courseTitle') courseTitle: string,
-    //     @Param('docNameTitle') docNameTitle: string,
-    //     @Param('id') id: number
-    // ) {
-    //     const data = await this.courseDocService.findOne(courseTitle, docNameTitle, id);
-    //     return {
-    //         message: "Course Document 조회에 성공하셨습니다.",
-    //         data: data,
-    //     };
-    // }
-
     @Delete(':id')
     async remove(
         @Param('courseId') courseId: number,

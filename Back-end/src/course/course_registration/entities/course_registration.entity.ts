@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, JoinColumn } from "typeorm";
-import { Registration } from "src/enums/role.enum";
 import { Course } from "src/course/courses/entities/course.entity";
 import { User } from "src/user/user.entity";
+import { CourseRegistrationStatus } from "src/enums/course-registration-status.enum";
 
 @Entity()
 export class CourseRegistration {
@@ -10,10 +10,10 @@ export class CourseRegistration {
 
     @Column({
         type: 'enum',
-        enum: Registration,
-        default: Registration.PENDING,
+        enum: CourseRegistrationStatus,
+        default: CourseRegistrationStatus.PENDING,
     })
-    course_registration_status: Registration;
+    course_registration_status: CourseRegistrationStatus;
 
     @Column({ type: 'timestamp', nullable: false })
     course_reporting_date: Date;

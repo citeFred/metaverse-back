@@ -5,5 +5,5 @@ export class CheckAttendanceDto {
     courseId: number;
 
     @IsString()
-    inputCode: string; // 학생이 입력한 난수
+    inputCode: string;
 }

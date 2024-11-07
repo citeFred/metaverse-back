@@ -1,9 +1,9 @@
 import { IsOptional, IsEnum } from 'class-validator';
-import { Registration } from '../../../enums/role.enum';
+import { CourseRegistrationStatus } from 'src/enums/course-registration-status.enum';
 
 export class UpdateRequestCourseRegistrationDto {
 
     @IsOptional()
-    @IsEnum(Registration)
-    course_registration_status?: Registration;
+    @IsEnum(CourseRegistrationStatus)
+    course_registration_status?: CourseRegistrationStatus;
 }

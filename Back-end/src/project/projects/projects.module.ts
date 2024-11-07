@@ -4,7 +4,7 @@ import { Project } from './entities/project.entity';
 import { ProjectsService } from './projects.service';
 import { ProjectsController } from './projects.controller';
 import { User } from '../../user/user.entity';
-import { UsersModule } from '../../user/users.module'; // UsersModule 임포트
+import { UsersModule } from '../../user/users.module';
 import { UsersService } from '../../user/users.service';
 import { ProjectRegistrationModule } from '../project_registration/registration.module';
 import { ProjectRegistrationService } from '../project_registration/registration.service';

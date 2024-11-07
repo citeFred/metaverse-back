@@ -12,7 +12,6 @@ export class ExhibitionIntroController {
 
     @Post('register')
     @UseInterceptors(AnyFilesInterceptor())
-    // @UseGuards(JwtAuthGuard)
     async create(@Body() createExhibitionIntroDto: CreateExhibitionIntroDto): Promise<{ message: string; intros: ExhibitionIntro[]; }> {
         const intros = await this.exhibitionIntroService.create(createExhibitionIntroDto);
         return { message: 'intro 생성이 완료되었습니다.', intros };
@@ -33,7 +32,6 @@ export class ExhibitionIntroController {
     @Patch()
     @UseGuards(JwtAuthGuard)
     async update(
-        // @Param('id') id: string, Number(id),  // URL에서 전달받은 ID
         @Body() updateExhibitionIntroDto: UpdateExhibitionIntroDto,
     ): Promise<{ message: string; intros: ExhibitionIntro[] }> {
         const intros = await this.exhibitionIntroService.update(updateExhibitionIntroDto); // id를 Number로 변환하여 전달

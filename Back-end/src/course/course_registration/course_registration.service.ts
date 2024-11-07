@@ -59,12 +59,6 @@ export class CourseRegistrationService {
         return await this.courseRegistrationRepository.save(courseRegistration);
     }
 
-    // 전체 수강 신청 조회
-    // async findAll(courseId: number): Promise<CourseRegistration[]> {
-    //     await this.validateCourseId(courseId);
-    //     return this.courseRegistrationRepository.find();
-    // }
-
     // <admin> 전체 수강 신청 정보 조회
     async findAllCoursesWithRegistrationsForAdmin(course_id: number): Promise<CourseRegistration[]> {
         await this.validateCourseId(course_id)

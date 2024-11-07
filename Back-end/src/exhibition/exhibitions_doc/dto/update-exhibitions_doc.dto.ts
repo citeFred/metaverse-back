@@ -4,9 +4,7 @@ import { IsString, IsOptional } from 'class-validator';
 
 
 export class UpdateExhibitionsDocDto extends PartialType(CreateExhibitionsDocDto) {
-
     @IsOptional() 
     @IsString()
     feedback?: string; 
-
 }

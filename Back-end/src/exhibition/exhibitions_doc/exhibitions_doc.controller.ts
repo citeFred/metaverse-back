@@ -1,30 +1,18 @@
-import { Controller, Get, Post, Put, Delete, Body, Param , UseGuards, UploadedFiles, BadRequestException} from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, UploadedFiles, BadRequestException} from '@nestjs/common';
 import { ExhibitionsDocService } from './exhibitions_doc.service';
 import { CreateExhibitionsDocDto } from './dto/create-exhibitions_doc.dto';
 import { UpdateExhibitionsDocDto } from './dto/update-exhibitions_doc.dto';
 import { ExhibitionDoc } from './entities/exhibition_doc.entity';
-import { UseInterceptors, UploadedFile } from '@nestjs/common';
-import { FileFieldsInterceptor, FileInterceptor } from '@nestjs/platform-express';
+import { UseInterceptors } from '@nestjs/common';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { RolesGuard } from '../../auth/roles.guard';
 import { Roles } from '../../auth/roles.decorator';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
-// @UseGuards(JwtAuthGuard,RolesGuard)
 @Controller('exhibition-docs')
 export class ExhibitionsDocController {
     constructor(private readonly exhibitionDocsService: ExhibitionsDocService) {}
 
-    // @Post('register')
-    // @UseInterceptors(FileInterceptor('file')) // 'file' 필드에서 파일을 업로드 받음
-    // @Roles('admin')
-    // async createExhibitionDoc(
-    //     @Body() createExhibitionDocDto: CreateExhibitionsDocDto,
-    //     @UploadedFile() file: Express.Multer.File, // 업로드된 파일을 가져옴
-    // ): Promise<{ message: string; doc: any }> { // 반환 타입 정의
-    //     const doc = await this.exhibitionDocsService.createExhibitionDoc(createExhibitionDocDto, file);
-    //     return { message: '전시 문서가 성공적으로 등록되었습니다.', doc };
-    // }
-  
     @Post('register')
     @UseInterceptors(FileFieldsInterceptor([
         { name: 'outputImages', maxCount: 5 }, // 최대 5개의 이미지 파일

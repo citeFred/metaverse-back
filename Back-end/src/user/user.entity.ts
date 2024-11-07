@@ -2,8 +2,8 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 import { ProjectRegistration } from '../project/project_registration/entities/registration.entity';
 import { Project } from '../project/projects/entities/project.entity';
-import { Role } from '../enums/role.enum';
-import { Exhibition } from '../exhibition/exhibitions/exhibition.entity';
+import { UserRole } from '../enums/user-role.enum';
+import { Exhibition } from '../exhibition/exhibitions/entities/exhibition.entity';
 import { Course } from 'src/course/courses/entities/course.entity';
 import { CourseRegistration } from 'src/course/course_registration/entities/course_registration.entity';
 import { Attendance } from 'src/attendance/entities/attendance.entity';
@@ -25,14 +25,13 @@ export class User {
     @Column()
     email: string;
 
-
     @Column({
         type: 'enum',
-        enum: Role,
+        enum: UserRole,
         nullable: false,
     })
 
-    user_role: Role; // Role 타입으로 변경
+    user_role: UserRole; // Role 타입으로 변경
 
     @ManyToMany(() => Course, course => course.user)
     @JoinTable()
@@ -61,4 +60,3 @@ export class User {
     @OneToMany(() => Attendance, attendance => attendance.user)
     attendances: Attendance[];
 }
-

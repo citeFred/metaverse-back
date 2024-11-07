@@ -9,7 +9,7 @@ import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid';
 import * as dotenv from 'dotenv';
 
-dotenv.config(); // .env 파일 로드
+dotenv.config();
 
 @Injectable()
 export class ProjectDocService {

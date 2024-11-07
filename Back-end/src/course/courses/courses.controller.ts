@@ -3,9 +3,7 @@ import { CoursesService } from './courses.service';
 import { RolesGuard } from '../../auth/roles.guard';
 import { Roles } from '../../auth/roles.decorator';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
-import { ApprovedInstructorGuard } from '../../auth/course.approved.guard';
 import { OwnershipGuard } from '../../auth/ownership.guard';
-// import { CreateCourseDto } from './dto/create-course.dto';
 
 @UseGuards(JwtAuthGuard,RolesGuard)
 @Controller('courses')
@@ -48,7 +46,6 @@ export class CoursesController {
 
     @Patch(':type/:id/update')
     @Roles('admin','instructor')
-    //@UseGuards(OwnershipGuard, ApprovedInstructorGuard)
     @UseGuards(OwnershipGuard)
     async update(
       @Param('id') id: number, 

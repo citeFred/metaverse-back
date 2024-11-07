@@ -1,7 +1,7 @@
 import { Controller, UseGuards, Request } from '@nestjs/common';
 import { ExhibitionService } from './exhibitions.service';
 import { CreateExhibitionDto } from './dto/create-exhibition.dto';
-import { Exhibition } from './exhibition.entity';
+import { Exhibition } from './entities/exhibition.entity';
 import { Get, Post, Body, Query, Param, Delete,Patch, HttpException, HttpStatus } from '@nestjs/common';
 import { UpdateExhibitionDto } from './dto/update-exhibition.dto';
 import { UseInterceptors, UploadedFile } from '@nestjs/common';

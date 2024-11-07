@@ -14,8 +14,6 @@ import { ProjectDocModule } from 'src/project/project_doc/project_doc.module';
 import { FeedbackModule } from 'src/project/feedback/feedback.module';
 dotenv.config();
 
-// ProjectsModule 임포트
-//손정민 작성
  @Module({
     imports: [
         TypeOrmModule.forFeature([User]),
@@ -26,10 +24,9 @@ dotenv.config();
         forwardRef(() => DocNameModule),
         forwardRef(() => ProjectDocModule),
         forwardRef(() => FeedbackModule),
-         // ProjectsModule을 forwardRef로 임포트
     ],
     providers: [UsersService,HashService],
     controllers: [UsersController],
-    exports: [UsersService,HashService], // 필요한 경우 UsersService를 내보냄
+    exports: [UsersService,HashService],
 })
 export class UsersModule {}

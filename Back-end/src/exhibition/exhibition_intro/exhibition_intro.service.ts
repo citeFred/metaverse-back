@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { ExhibitionIntro } from './entities/exhibition_intro.entity';
 import { CreateExhibitionIntroDto } from './dto/create-exhibition_intro.dto';
 import { UpdateExhibitionIntroDto } from './dto/update-exhibition_intro.dto';
-import { Exhibition } from '../exhibitions/exhibition.entity';
+import { Exhibition } from '../exhibitions/entities/exhibition.entity';
 
 @Injectable()
 export class ExhibitionIntroService {
@@ -64,7 +64,6 @@ export class ExhibitionIntroService {
         return exhibitionIntro;
     }
 
-    //id: , 
     async update(updateExhibitionIntroDto: UpdateExhibitionIntroDto): Promise<ExhibitionIntro[]> {
         const exhibitionId = updateExhibitionIntroDto.exhibition_id; // DTO에서 전시 ID 가져오기
         const existingIntros = await this.exhibitionIntroRepository.find({ where: { exhibition: { exhibition_id: exhibitionId } } });

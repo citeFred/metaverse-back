@@ -1,5 +1,5 @@
 import { Course } from '../entities/course.entity';
-import { DocNameResponseDto } from 'src/course/doc_name/dto/doc_name-with-coursedoc-response.dto';
+import { DocNameResponseDto } from 'src/course/doc_name/dto/doc-name-with-coursedoc-response.dto';
 
 export class CourseWithDocNameAndCourseDocResponseDto {
     course_title: string;

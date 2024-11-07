@@ -8,10 +8,10 @@ export class Attendance {
     attendance_id: number;
 
     @ManyToOne(() => Course, course => course.attendances)
-    course: Course; // Course와의 관계
+    course: Course;
 
     @ManyToOne(() => User, user => user.attendances)
-    user: User; // User와의 관계
+    user: User;
     
     @Column()
     attendance_date: Date;

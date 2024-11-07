@@ -1,6 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext, ForbiddenException, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../user/users.service';
-import { Role } from 'src/enums/role.enum';
+import { UserRole } from 'src/enums/user-role.enum';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -28,7 +28,7 @@ export class RolesGuard implements CanActivate {
     }
 
     // 사용자 역할을 확인하는 메소드
-    async getUserRole(userId: number): Promise<Role> {
+    async getUserRole(userId: number): Promise<UserRole> {
         const user = await this.userService.findOne(userId);
         return user.user_role; // 역할 반환
     }
