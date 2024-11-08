@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Request } from '@nestjs/common';
+import { Controller, UseGuards, Request, Logger } from '@nestjs/common';
 import { ExhibitionService } from './exhibitions.service';
 import { CreateExhibitionDto } from './dto/create-exhibition.dto';
 import { Exhibition } from './entities/exhibition.entity';
@@ -13,6 +13,8 @@ import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 @UseGuards(JwtAuthGuard,RolesGuard)
 @Controller('exhibitions')
 export class ExhibitionController {
+    private readonly logger = new Logger(ExhibitionController.name);
+
     constructor(private readonly exhibitionService: ExhibitionService) {}
 
     @Post('register')
@@ -92,10 +94,15 @@ export class ExhibitionController {
         }
     }
 
-    @Delete(':exhibition_title')
-    // @Roles('admin')
-    async remove(@Param('exhibition_title') exhibitionTitle: string): Promise<{ message: string }> {
-        await this.exhibitionService.remove(exhibitionTitle);
+    // 특정 전시 삭제
+    @Delete(':id')
+    @Roles('admin')
+    async remove(
+        @Param('id') id: number
+        ): Promise<{ message: string }> {
+        this.logger.verbose(`deleting Exhibition with ID ${id}`);
+        await this.exhibitionService.remove(id);
+        this.logger.verbose(`Article deleted successfully with ID ${id}`);
         return { message: '전시가 삭제되었습니다.' };
     }
 

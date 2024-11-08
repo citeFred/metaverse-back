@@ -1,4 +1,4 @@
-import { Injectable,ConflictException,BadRequestException,NotFoundException,InternalServerErrorException} from '@nestjs/common';
+import { Injectable,ConflictException,BadRequestException,NotFoundException,InternalServerErrorException, Logger} from '@nestjs/common';
 import { Exhibition } from './entities/exhibition.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository,Not } from 'typeorm';
@@ -12,6 +12,8 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 dotenv.config(); // .env 파일 로드
 @Injectable()
 export class ExhibitionService {
+    private readonly logger = new Logger(ExhibitionService.name);
+
     private s3: S3Client;
     constructor(
         @InjectRepository(Exhibition)
@@ -164,16 +166,14 @@ export class ExhibitionService {
         });
     }
 
-    async remove(exhibitionTitle: string): Promise<void> {
-        const result = await this.exhibitionsRepository.delete({
-            exhibition_title: exhibitionTitle,
-        });
-    
-        if (result.affected === 0) {
-            throw new NotFoundException(`Exhibition with title "${exhibitionTitle}" not found`);
-        }
+    // 특정 번호의 게시글 삭제
+    async remove(id: number): Promise<void> {
+        const foundExhibition = await this.findOne(id);
+
+        await this.exhibitionsRepository.remove(foundExhibition);
+        this.logger.verbose(`Article with ID ${id} deleted`);
     }
-    
+
     async updateExhibition(
         exhibitionTitle: string,
         updateExhibitionDto: UpdateExhibitionDto
