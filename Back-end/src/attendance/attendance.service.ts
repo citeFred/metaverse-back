@@ -24,7 +24,7 @@ export class AttendanceService {
     // 출석 기록 생성
     async createAttendance(courseId: number, userId: number, field: 'present' | 'absent' | 'late', randomCode: string): Promise<Attendance> {
         const user = await this.userRepository.findOne({ where: { user_id: userId } });
-        const course = await this.courseRepository.findOne({ where: { course_id: courseId } });
+        const course = await this.courseRepository.findOne({ where: { id: courseId } });
         
         // 사용자 또는 수업이 존재하지 않으면 예외 처리
         if (!user || !course) {
@@ -46,7 +46,7 @@ export class AttendanceService {
 
     async findAttendance(courseId: number, userId: number): Promise<Attendance> {
         const attendance = await this.attendanceRepository.findOne({
-            where: { course: { course_id: courseId }, user: { user_id: userId } },
+            where: { course: { id: courseId }, user: { user_id: userId } },
         });
 
         if (!attendance) {
@@ -81,7 +81,7 @@ export class AttendanceService {
     // 특정 학생의 출석 상태 업데이트
     async updateAttendanceByStudentId(dto: UpdateStudentAttendanceDto): Promise<Attendance> {
         const attendance = await this.attendanceRepository.findOne({
-            where: { course: { course_id: dto.courseId }, user: { user_id: dto.studentId } },
+            where: { course: { id: dto.courseId }, user: { user_id: dto.studentId } },
         });
 
         if (!attendance) {
@@ -95,7 +95,7 @@ export class AttendanceService {
     async getUsersInCourse(courseId: number): Promise<User[]> {
         const registrations = await this.courseRegistrationRepository.find({
             where: { 
-                course: { course_id: courseId }, 
+                course: { id: courseId }, 
                 course_registration_status: CourseRegistrationStatus.APPROVED // 'approved' 상태의 학생만 가져오기
             },
             relations: ['user'], // 사용자 정보를 가져옵니다.
@@ -117,7 +117,7 @@ export class AttendanceService {
         const attendances: Attendance[] = [];
         for (const registration of approvedRegistrations) {
             const attendance = this.attendanceRepository.create({
-                course: { course_id: courseId }, // course_id로 Course 엔티티 참조
+                course: { id: courseId }, // course_id로 Course 엔티티 참조
                 user: registration.user, // 사용자 엔티티 참조
                 attendance_date: new Date(),
                 field: 'absent', // 기본값: 'absent'

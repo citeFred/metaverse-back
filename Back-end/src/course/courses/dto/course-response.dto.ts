@@ -1,15 +1,17 @@
 import { Course } from '../entities/course.entity';
 
 export class CourseResponseDto {
-    course_title: string;
+    id: number;
+    title: string;
+    instructor: string;
     description: string;
-    course_notice: string;
-    generation: string;
+    generation: number;
 
     constructor(course: Course) {
-        this.course_title = course.course_title;
+        this.id = course.id;
+        this.title = course.title;
+        this.instructor = course.instructor;
         this.description = course.description;
-        this.course_notice = course.course_notice;
         this.generation = course.generation;
     }
 }

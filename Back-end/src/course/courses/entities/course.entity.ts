@@ -4,26 +4,21 @@ import { Lesson } from 'src/course/lesson/entities/lesson.entity';
 import { User } from 'src/user/user.entity';
 import { CourseRegistration } from 'src/course/course_registration/entities/course_registration.entity';
 import { Attendance } from 'src/attendance/entities/attendance.entity';
+import { BaseEntity } from 'src/common/base.entity';
 
 @Entity()
-export class Course {
-    @PrimaryGeneratedColumn()
-    course_id: number;
+export class Course extends BaseEntity {
+    @Column({ type: 'varchar', unique: true })
+    title: string;
 
-    @Column({ type: 'varchar', length: 10, unique: true })
-    course_title: string;
-
-    @Column({ type: 'varchar', length: 100 })
+    @Column({ type: 'varchar' })
     description: string;
     
-    @Column({ type: 'varchar', length: 40 })
-    instructor_name: string;
+    @Column({ type: 'varchar' })
+    instructor: string;
 
-    @Column({ type: 'varchar', length: 100, nullable:true })
-    course_notice: string;
-
-    @Column({ type: 'varchar', length: 10, nullable: false, default: '3기'})
-    generation: string;
+    @Column({ type: 'int', nullable: false, default: 3})
+    generation: number;
 
     @ManyToMany(() => User, (user) => user.course)
     user: User[];

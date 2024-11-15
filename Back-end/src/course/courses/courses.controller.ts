@@ -1,13 +1,17 @@
-import { Controller, Post, Get, Patch, Delete, Param, Body, UseGuards, Request } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Delete, Param, Body, UseGuards, Request, Query, Logger } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { RolesGuard } from '../../auth/roles.guard';
 import { Roles } from '../../auth/roles.decorator';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { OwnershipGuard } from '../../auth/ownership.guard';
+import { ApiResponse } from 'src/common/api-response.dto';
+import { CoursePaginatedResponseDto } from './dto/course-paginated-response.dto';
 
 @UseGuards(JwtAuthGuard,RolesGuard)
-@Controller('courses')
+@Controller('api/courses')
 export class CoursesController {
+    private readonly logger = new Logger(CoursesController.name);
+
     constructor(private readonly coursesService: CoursesService) {}
 
     @Post('register')
@@ -30,6 +34,19 @@ export class CoursesController {
             message: "전체 강의 조회에 성공하셨습니다",
             data: data
         };
+    }
+
+    // 페이징 처리된 코스 목록 조회
+    @Get('paginated')
+    @Roles('student','instructor','admin')
+    async getPaginatedCourses(
+        @Query('page') page: number = 1,
+        @Query('limit') limit: number = 10
+    ): Promise<ApiResponse<CoursePaginatedResponseDto>> {
+        this.logger.verbose(`Retrieving paginated courses: page ${page}, limit ${limit}`);
+        const paginatedCourses = await this.coursesService.getPaginatedCourses(page, limit);
+        this.logger.verbose(`Paginated courses retrieved successfully`);
+        return new ApiResponse(true, 200, 'Paginated articles retrieved successfully', paginatedCourses);
     }
 
     @Get(':id/read')

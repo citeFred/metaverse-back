@@ -21,7 +21,7 @@ export class CourseRegistrationService {
 
     // 강의 ID가 유효한지 확인
     async validateCourseId(courseId: number): Promise<void> {
-        const course = await this.coursesRepository.findOne({ where: { course_id: courseId } });
+        const course = await this.coursesRepository.findOne({ where: { id: courseId } });
         if (!course) {
             throw new NotFoundException(`Course with ID ${courseId} not found`);
         }
@@ -31,7 +31,7 @@ export class CourseRegistrationService {
     async isEnrolled(courseId: number, userId: number): Promise<boolean> {
         const existingEnrollment = await this.courseRegistrationRepository.findOne({
             where: {
-                course: { course_id: courseId }, // 프로젝트 ID로 필터링
+                course: { id: courseId }, // 프로젝트 ID로 필터링
                 user: { user_id: userId }, // 사용자 ID로 필터링
             },
         });
@@ -52,7 +52,7 @@ export class CourseRegistrationService {
         // 처음 참가 신청
         const courseRegistration = this.courseRegistrationRepository.create(createCourseRegistrationDto);
         courseRegistration.user = await this.userRepository.findOneBy({ user_id: loginedUser });  // 특정 사용자와 연결된 정보
-        courseRegistration.course = await this.coursesRepository.findOneBy({ course_id: courseId });  // 특정 프로젝트와 연결된 정보
+        courseRegistration.course = await this.coursesRepository.findOneBy({ id: courseId });  // 특정 프로젝트와 연결된 정보
         if (!courseRegistration.user || !courseRegistration.course) {
             throw new NotFoundException('사용자 또는 강의를 찾을 수 없습니다.');
         }
@@ -64,7 +64,7 @@ export class CourseRegistrationService {
         await this.validateCourseId(course_id)
         const registrations = await this.courseRegistrationRepository.find({
             relations: ['user', 'course'], // 사용자와 강의 정보 모두 로드
-            where: { course: { generation: '3기' } },
+            where: { course: { generation: 3 } },
         });
     
         if (registrations.length === 0) {

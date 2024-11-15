@@ -6,6 +6,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CourseRegistration } from '../course_registration/entities/course_registration.entity';
 import { CourseRegistrationStatus } from 'src/enums/course-registration-status.enum';
+import { CoursePaginatedResponseDto } from './dto/course-paginated-response.dto';
+import { CourseResponseDto } from './dto/course-response.dto';
 
 @Injectable()
 export class CoursesService {
@@ -20,7 +22,7 @@ export class CoursesService {
 
     async create(createCourseDto: CreateCourseDto): Promise<Course> {
         const existCourse = await this.coursesRepository.findOne({
-            where: { course_title: createCourseDto.course_title },
+            where: { title: createCourseDto.title },
         });
 
         if (existCourse) {
@@ -29,7 +31,7 @@ export class CoursesService {
   
         const course = this.coursesRepository.create(createCourseDto);
         await this.coursesRepository.save(course);
-        this.logger.log(`강의가 생성되었습니다: ${course.course_title}`);
+        this.logger.log(`강의가 생성되었습니다: ${course.title}`);
         return course;
     }
 
@@ -37,9 +39,26 @@ export class CoursesService {
         return this.coursesRepository.find();
     }
 
-    async findOne(id: number): Promise<Course> {
+    // 페이징 추가 게시글 조회 기능
+    async getPaginatedCourses(page: number, limit: number): Promise<CoursePaginatedResponseDto> {
+        this.logger.verbose(`Retrieving paginated courses: page ${page}, limit ${limit}`);
+        const skip: number = (page - 1) * limit;
+    
+        const [foundCourses, totalCount] = await this.coursesRepository.createQueryBuilder("course")
+            // .leftJoinAndSelect("course.author", "user")
+            .skip(skip)
+            .take(limit)
+            .orderBy("course.createdAt", "DESC") // 내림차순
+            .getManyAndCount();
+    
+        const courseDtos = foundCourses.map(foundCourse => new CourseResponseDto(foundCourse));
+        this.logger.verbose(`Paginated courses retrieved successfully`);
+        return new CoursePaginatedResponseDto(courseDtos, totalCount);
+    }
+
+    async findOne(courseId: number): Promise<Course> {
         const course = await this.coursesRepository.findOne(
-            { where: { course_id: id },
+            { where: { id: courseId },
             relations: ['docName','user'] 
         });
         if (!course) {
@@ -52,17 +71,17 @@ export class CoursesService {
         const registration = await this.courseRegistrationRepository.findOne({
             where: {
                 user: { user_id: loginedUserId }, // 현재 로그인한 사용자 ID
-                course: { course_id: courseId }, // 현재 프로젝트 ID
+                course: { id: courseId }, // 현재 프로젝트 ID
                 course_registration_status: CourseRegistrationStatus.APPROVED, // 승인된 상태 확인
             },
         });
         return !!registration;
     } 
 
-    async update(id: number, updateCourseDto: UpdateCourseDto, loginedUser: number): Promise<Course> {
+    async update(courseId: number, updateCourseDto: UpdateCourseDto, loginedUser: number): Promise<Course> {
         // 데이터베이스에서 해당 ID의 강의 조회
         const course = await this.coursesRepository.findOne(
-            { where: { course_id: id } 
+            { where: { id: courseId } 
         });
 
         if (!course) {
@@ -71,35 +90,32 @@ export class CoursesService {
         }
 
         // 해당 프로젝트에 대한 승인된 학생인지
-        const approvedInstructor = await this.isApprovedInstructor(loginedUser, id);
+        const approvedInstructor = await this.isApprovedInstructor(loginedUser, courseId);
 
         if (!approvedInstructor) {
             throw new ConflictException(`수정 권한이 없습니다.`);
         }
   
         // UpdateCourseDto에 포함된 필드만 업데이트
-        if (updateCourseDto.course_title) {
-            course.course_title = updateCourseDto.course_title;
+        if (updateCourseDto.title) {
+            course.title = updateCourseDto.title;
         }
         if (updateCourseDto.description) {
             course.description = updateCourseDto.description;
         }
-        if (updateCourseDto.instructor_name) {
-            course.instructor_name = updateCourseDto.instructor_name;
-        }
-        if (updateCourseDto.course_notice) {
-            course.course_notice = updateCourseDto.course_notice;
+        if (updateCourseDto.instructor) {
+            course.instructor = updateCourseDto.instructor;
         }
   
         // 업데이트된 엔티티를 저장
         await this.coursesRepository.save(course);
-        this.logger.log(`Course updated: ${course.course_title}`);
+        this.logger.log(`Course updated: ${course.title}`);
         return course;
     }
   
-    async remove(id: number): Promise<void> {
+    async remove(courseId: number): Promise<void> {
         const course = await this.coursesRepository.findOne(
-            { where: { course_id: id },
+            { where: { id: courseId },
             relations: ['docName'] 
         });
         if (!course) {

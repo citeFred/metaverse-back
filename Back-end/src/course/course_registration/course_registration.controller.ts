@@ -18,14 +18,14 @@ export class CourseRegistrationController {
     // 수강 신청
     async create(
         @Body() createRequestCourseRegistrationDto: CreateRequestCourseRegistrationDto,
-        @Param('courseId') course_id: number,
+        @Param('id') courseId: number,
         @Request() req
     ): Promise<{ message: string }> {
         // 로그인된 user 저장
         const loginedUser = req.user.user_id;
 
         // 수강 신청 생성
-        await this.courseRegistrationService.create(createRequestCourseRegistrationDto, course_id, loginedUser);
+        await this.courseRegistrationService.create(createRequestCourseRegistrationDto, courseId, loginedUser);
 
         return { 
             message: "수강 신청이 완료되었습니다."
@@ -36,9 +36,9 @@ export class CourseRegistrationController {
     @Get()
     @Roles('admin')
     async findAllForAdmin(
-        @Param('courseId') course_id: number,
+        @Param('id') courseId: number,
     ): Promise<{ message: string, data: GetAdminResponseCourseRegistrationDto[] }> {
-        const foundRegistrations = await this.courseRegistrationService.findAllCoursesWithRegistrationsForAdmin(course_id);
+        const foundRegistrations = await this.courseRegistrationService.findAllCoursesWithRegistrationsForAdmin(courseId);
         const responseDtos = foundRegistrations.map(responseDto => new GetAdminResponseCourseRegistrationDto(responseDto));
 
         return {
@@ -69,7 +69,7 @@ export class CourseRegistrationController {
     async update(
         @Param('id') id: number, 
         @Body() updateRequestCourseRegistrationDto: UpdateRequestCourseRegistrationDto,
-        @Param('course') courseId: number
+        @Param('courseId') courseId: number
     ) {
         const data = this.courseRegistrationService.update(id, updateRequestCourseRegistrationDto, courseId);
         return {
@@ -83,7 +83,7 @@ export class CourseRegistrationController {
     @Roles('instructor', 'student')
     remove(
         @Param('id') id: number,
-        @Param('course') courseId: number
+        @Param('courseId') courseId: number
     ) {
         const data = this.courseRegistrationService.remove(id, courseId);
         return {
