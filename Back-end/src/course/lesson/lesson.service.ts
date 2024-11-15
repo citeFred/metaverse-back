@@ -20,7 +20,7 @@ export class LessonService {
         createLessonDto: CreateLessonDto
     ): Promise<Lesson> {
         const course = await this.courseRepository.findOne({ 
-            where: { course_id: courseId }
+            where: { id: courseId }
         });
         if (!course) {
             throw new NotFoundException("해당 코스를 찾을 수 없습니다.");
@@ -35,7 +35,7 @@ export class LessonService {
         courseId:  number
     ): Promise<Lesson[]> {
         const lessons = await this.lessonRepository.find({
-            where: { course: { course_id: courseId } } // courseTitle을 사용하여 필터링
+            where: { course: { id: courseId } } // courseTitle을 사용하여 필터링
         });
         if (!lessons.length) {
             throw new NotFoundException("해당 코스의 강의가 없습니다.");
@@ -49,7 +49,7 @@ export class LessonService {
     ): Promise<Lesson> {
         const lesson = await this.lessonRepository.findOne({
             where: { 
-                course: { course_id: courseId }, 
+                course: { id: courseId }, 
                 lesson_id: lessonId
             }
         });

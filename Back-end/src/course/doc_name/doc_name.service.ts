@@ -20,7 +20,7 @@ export class DocNameService {
         createDocNameDto: CreateDocNameDto
     ): Promise<DocName> {
         const course = await this.courseRepository.findOne({ 
-            where: { course_id: courseId }
+            where: { id: courseId }
         })
         if (!course) {
             throw new NotFoundException("해당 강의를 찾을 수 없습니다.");
@@ -33,7 +33,7 @@ export class DocNameService {
         courseId: number, 
     ): Promise<DocName[]> {
         const course = await this.courseRepository.findOne({ 
-            where: { course_id: courseId }
+            where: { id: courseId }
         });
         if (!course) {
             throw new NotFoundException("해당 강의를 찾을 수 없습니다.");
@@ -65,7 +65,7 @@ export class DocNameService {
         topicId: number
     ): Promise<DocName> {
         const course = await this.courseRepository.findOne({
-            where: { course_id: courseId }
+            where: { id: courseId }
         });
         if (!course) {
             throw new NotFoundException("해당 강의를 찾을 수 없습니다.");
@@ -85,7 +85,7 @@ export class DocNameService {
         courseId: number
     ): Promise<DocName> {
         const course = await this.courseRepository.findOne({
-            where: { course_id: courseId }
+            where: { id: courseId }
         });
         if (!course) {
             throw new NotFoundException("해당 강의를 찾을 수 없습니다.");
