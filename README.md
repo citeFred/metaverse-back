@@ -15,9 +15,9 @@
 <img width="1792" alt="image" src="https://github.com/user-attachments/assets/002918bb-1389-47e9-81cc-e0afae95d643">
 
 ## 🗄️ 서버 Github
-- Backend Server 
+- Backend Server(현재 페이지)
 https://github.com/citeFred/metaverse-back
-- Frontend Server(현재 페이지)
+- Frontend Server
 https://github.com/designmj/metaverse-front
 <br>
 <br>
