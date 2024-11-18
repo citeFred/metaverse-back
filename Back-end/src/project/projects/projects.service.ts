@@ -5,7 +5,7 @@ import { Project } from './entities/project.entity';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ProjectRegistration } from '../project_registration/entities/registration.entity';
-import { CourseRegistrationStatus } from 'src/enums/course-registration-status.enum';
+import { ClassRegistrationStatus } from 'src/enums/class-registration-status.enum';
 
 @Injectable()
 export class ProjectsService {
@@ -22,7 +22,7 @@ export class ProjectsService {
             where: {
                 user: { user_id: loginedUserId }, // 현재 로그인한 사용자 ID
                 project: { project_id: projectId }, // 현재 프로젝트 ID
-                registration_status: CourseRegistrationStatus.APPROVED, // 승인된 상태 확인
+                registration_status: ClassRegistrationStatus.APPROVED, // 승인된 상태 확인
             },
         });
         return !!registration;

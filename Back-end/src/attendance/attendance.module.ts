@@ -4,12 +4,12 @@ import { AttendanceController } from './attendance.controller';
 import { AttendanceService } from './attendance.service';
 import { Attendance } from './entities/attendance.entity';
 import { User } from '../user//user.entity';
-import { Course } from '../course/courses/entities/course.entity';
-import { CourseRegistration } from 'src/course/course_registration/entities/course_registration.entity';
+import { Class } from '../class/classes/entities/class.entity';
+import { ClassRegistration } from 'src/class/class_registration/entities/class_registration.entity';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([Attendance, User, Course, CourseRegistration]),
+        TypeOrmModule.forFeature([Attendance, User, Class, ClassRegistration]),
     ],
     controllers: [AttendanceController],
     providers: [AttendanceService],

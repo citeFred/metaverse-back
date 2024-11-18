@@ -2,7 +2,7 @@ import { IsEnum, IsNumber } from 'class-validator';
 
 export class UpdateStudentAttendanceDto {
     @IsNumber()
-    courseId: number;
+    classId: number;
 
     @IsNumber()
     studentId: number;

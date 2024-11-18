@@ -4,9 +4,9 @@ import { Repository } from 'typeorm';
 import { Attendance } from './entities/attendance.entity';
 import { UpdateStudentAttendanceDto } from './dto/update-student-attendance.dto';
 import { User } from '../user/user.entity';
-import { Course } from '../course/courses/entities/course.entity';
-import { CourseRegistration } from '../course/course_registration/entities/course_registration.entity';
-import { CourseRegistrationStatus } from 'src/enums/course-registration-status.enum';
+import { Class } from '../class/classes/entities/class.entity';
+import { ClassRegistration } from '../class/class_registration/entities/class_registration.entity';
+import { ClassRegistrationStatus } from 'src/enums/class-registration-status.enum';
 
 @Injectable()
 export class AttendanceService {
@@ -15,25 +15,25 @@ export class AttendanceService {
         private attendanceRepository: Repository<Attendance>,
         @InjectRepository(User)
         private userRepository: Repository<User>,
-        @InjectRepository(Course)
-        private courseRepository: Repository<Course>,
-        @InjectRepository(CourseRegistration)
-        private courseRegistrationRepository: Repository<CourseRegistration>,
+        @InjectRepository(Class)
+        private classRepository: Repository<Class>,
+        @InjectRepository(ClassRegistration)
+        private classRegistrationRepository: Repository<ClassRegistration>,
     ) {}
 
     // 출석 기록 생성
-    async createAttendance(courseId: number, userId: number, field: 'present' | 'absent' | 'late', randomCode: string): Promise<Attendance> {
+    async createAttendance(classId: number, userId: number, field: 'present' | 'absent' | 'late', randomCode: string): Promise<Attendance> {
         const user = await this.userRepository.findOne({ where: { user_id: userId } });
-        const course = await this.courseRepository.findOne({ where: { id: courseId } });
+        const foundClass = await this.classRepository.findOne({ where: { id: classId } });
         
         // 사용자 또는 수업이 존재하지 않으면 예외 처리
-        if (!user || !course) {
-            throw new NotFoundException('User or Course not found');
+        if (!user || !foundClass) {
+            throw new NotFoundException('User or Class not found');
         }
 
         // 출석 기록 생성
         const attendance = this.attendanceRepository.create({
-            course,
+            class: foundClass,
             user,
             attendance_date: new Date(),
             field,
@@ -44,9 +44,9 @@ export class AttendanceService {
         return this.attendanceRepository.save(attendance);
     }
 
-    async findAttendance(courseId: number, userId: number): Promise<Attendance> {
+    async findAttendance(classId: number, userId: number): Promise<Attendance> {
         const attendance = await this.attendanceRepository.findOne({
-            where: { course: { id: courseId }, user: { user_id: userId } },
+            where: { class: { id: classId }, user: { user_id: userId } },
         });
 
         if (!attendance) {
@@ -67,8 +67,8 @@ export class AttendanceService {
         return this.attendanceRepository.save(attendance);
     }
 
-    async checkAttendance(courseId: number, userId: number, inputCode: string): Promise<boolean> {
-        const attendance = await this.findAttendance(courseId, userId);
+    async checkAttendance(classId: number, userId: number, inputCode: string): Promise<boolean> {
+        const attendance = await this.findAttendance(classId, userId);
 
         // 입력한 난수와 저장된 난수 비교
         if (attendance.random_code === inputCode) {
@@ -81,7 +81,7 @@ export class AttendanceService {
     // 특정 학생의 출석 상태 업데이트
     async updateAttendanceByStudentId(dto: UpdateStudentAttendanceDto): Promise<Attendance> {
         const attendance = await this.attendanceRepository.findOne({
-            where: { course: { id: dto.courseId }, user: { user_id: dto.studentId } },
+            where: { class: { id: dto.classId }, user: { user_id: dto.studentId } },
         });
 
         if (!attendance) {
@@ -92,11 +92,11 @@ export class AttendanceService {
         return this.attendanceRepository.save(attendance);
     }
 
-    async getUsersInCourse(courseId: number): Promise<User[]> {
-        const registrations = await this.courseRegistrationRepository.find({
+    async getUsersInClass(classId: number): Promise<User[]> {
+        const registrations = await this.classRegistrationRepository.find({
             where: { 
-                course: { id: courseId }, 
-                course_registration_status: CourseRegistrationStatus.APPROVED // 'approved' 상태의 학생만 가져오기
+                class: { id: classId }, 
+                class_registration_status: ClassRegistrationStatus.APPROVED // 'approved' 상태의 학생만 가져오기
             },
             relations: ['user'], // 사용자 정보를 가져옵니다.
         });
@@ -104,20 +104,20 @@ export class AttendanceService {
         return registrations.map(registration => registration.user); // 등록된 사용자 목록 반환
     }
 
-    async createAttendanceForApprovedStudents(courseId: number, randomCode: string): Promise<Attendance[]> {
+    async createAttendanceForApprovedStudents(classId: number, randomCode: string): Promise<Attendance[]> {
         // 승인된 학생 조회
-        const approvedRegistrations = await this.courseRegistrationRepository
+        const approvedRegistrations = await this.classRegistrationRepository
             .createQueryBuilder('registration')
             .leftJoinAndSelect('registration.user', 'user') // 사용자와 조인
-            .where('registration.course_id = :courseId', { courseId })
-            .andWhere('registration.course_registration_status = :status', { status: CourseRegistrationStatus.APPROVED })
+            .where('registration.class_id = :classId', { classId })
+            .andWhere('registration.class_registration_status = :status', { status: ClassRegistrationStatus.APPROVED })
             .getMany(); // 여러 개의 결과 가져오기
     
         // 출석 기록 생성 및 저장
         const attendances: Attendance[] = [];
         for (const registration of approvedRegistrations) {
             const attendance = this.attendanceRepository.create({
-                course: { id: courseId }, // course_id로 Course 엔티티 참조
+                class: { id: classId }, // class_id로 Class 엔티티 참조
                 user: registration.user, // 사용자 엔티티 참조
                 attendance_date: new Date(),
                 field: 'absent', // 기본값: 'absent'
