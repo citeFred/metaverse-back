@@ -2,7 +2,7 @@ import { IsNumber, IsString } from 'class-validator';
 
 export class CheckAttendanceDto {
     @IsNumber()
-    courseId: number;
+    classId: number;
 
     @IsString()
     inputCode: string;

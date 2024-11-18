@@ -8,8 +8,8 @@ import { ProjectsModule } from '../project/projects/projects.module';
 import * as dotenv from 'dotenv';
 import { ExhibitionModule } from 'src/exhibition/exhibitions/exhibitions.module';
 import { ExhibitionsDocModule } from 'src/exhibition/exhibitions_doc/exhibitions_doc.module';
-import { CourseDocModule } from 'src/course/course_doc/course_doc.module';
-import { DocNameModule } from 'src/course/doc_name/doc_name.module';
+import { ClassDocModule } from 'src/class/class_doc/class_doc.module';
+import { DocNameModule } from 'src/class/doc_name/doc_name.module';
 import { ProjectDocModule } from 'src/project/project_doc/project_doc.module';
 import { FeedbackModule } from 'src/project/feedback/feedback.module';
 dotenv.config();
@@ -20,7 +20,7 @@ dotenv.config();
         forwardRef(() => ProjectsModule),
         forwardRef(() => ExhibitionModule),
         forwardRef(() => ExhibitionsDocModule),
-        forwardRef(() => CourseDocModule),
+        forwardRef(() => ClassDocModule),
         forwardRef(() => DocNameModule),
         forwardRef(() => ProjectDocModule),
         forwardRef(() => FeedbackModule),

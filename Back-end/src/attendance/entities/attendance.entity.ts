@@ -1,4 +1,4 @@
-import { Course } from 'src/course/courses/entities/course.entity';
+import { Class } from 'src/class/classes/entities/class.entity';
 import { User } from 'src/user/user.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
@@ -7,8 +7,8 @@ export class Attendance {
     @PrimaryGeneratedColumn()
     attendance_id: number;
 
-    @ManyToOne(() => Course, course => course.attendances)
-    course: Course;
+    @ManyToOne(() => Class, classEntity => classEntity.attendances)
+    class: Class;
 
     @ManyToOne(() => User, user => user.attendances)
     user: User;

@@ -1,9 +1,9 @@
 import { Injectable, CanActivate, ExecutionContext, ForbiddenException, UnauthorizedException } from '@nestjs/common';
 import { JwtAuthGuard } from './jwt-auth.guard';
-import { CoursesService } from '../course/courses/courses.service'; // 코스 서비스 임포트
+import { ClassesService } from '../class/classes/classes.service'; // 코스 서비스 임포트
 import { ProjectsService } from '../project/projects/projects.service'; // 프로젝트 서비스 임포트
-import { CourseDocService } from '../course/course_doc/course_doc.service';
-import { DocNameService } from '../course/doc_name/doc_name.service';
+import { ClassDocService } from '../class/class_doc/class_doc.service';
+import { DocNameService } from '../class/doc_name/doc_name.service';
 import { ProjectDocService } from 'src/project/project_doc/project_doc.service';
 import { FeedbackService } from 'src/project/feedback/feedback.service';
 
@@ -11,9 +11,9 @@ import { FeedbackService } from 'src/project/feedback/feedback.service';
 @Injectable()
 export class OwnershipGuard extends JwtAuthGuard implements CanActivate {
     constructor(
-        private readonly courseService: CoursesService,
+        private readonly clasesService: ClassesService,
         private readonly projectService: ProjectsService,
-        private readonly courseDocService: CourseDocService,
+        private readonly classDocService: ClassDocService,
         private readonly docNameService: DocNameService,
         private readonly projectDocService: ProjectDocService,
         private readonly feedbackService: FeedbackService,
@@ -42,13 +42,13 @@ export class OwnershipGuard extends JwtAuthGuard implements CanActivate {
         }
 
         let resourceOwnerId: number | null = null;
-        if (resourceType === 'course') {
-            const course = await this.courseService.findOne(resourceId);
-            if (!course) {
+        if (resourceType === 'class') {
+            const foundClass = await this.clasesService.findOne(resourceId);
+            if (!foundClass) {
                 throw new ForbiddenException('존재하지 않는 코스입니다.');
             }
 
-            const owner = course.user.find(user => user.user_id === user.user_id);
+            const owner = foundClass.user.find(user => user.user_id === user.user_id);
             if (!owner) {
                 throw new ForbiddenException('자신의 리소스만 수정할 수 있습니다.');
             }
@@ -108,13 +108,13 @@ export class OwnershipGuard extends JwtAuthGuard implements CanActivate {
             resourceOwnerId = owner.user_id; 
         }
 
-        else if ( resourceType ==='courseDoc'){
-            const courseDoc = await this.courseDocService.findById(resourceId);
-            if (!courseDoc){
+        else if ( resourceType ==='classDoc'){
+            const classDoc = await this.classDocService.findById(resourceId);
+            if (!classDoc){
                 throw new ForbiddenException('존재하지 않는 전시회입니다.');
             }
 
-            const owner = courseDoc.docName.course.user.find(user => user.user_id === user.user_id)
+            const owner = classDoc.docName.class.user.find(user => user.user_id === user.user_id)
             if (!owner) {
                 throw new ForbiddenException('자신의 리소스만 수정할 수 있습니다.');
             }
@@ -127,7 +127,7 @@ export class OwnershipGuard extends JwtAuthGuard implements CanActivate {
                 throw new ForbiddenException('존재하지 않는 전시회입니다.');
             }
 
-            const owner = docName.course.user.find(user => user.user_id === user.user_id)
+            const owner = docName.class.user.find(user => user.user_id === user.user_id)
             if (!owner) {
                 throw new ForbiddenException('자신의 리소스만 수정할 수 있습니다.');
             }

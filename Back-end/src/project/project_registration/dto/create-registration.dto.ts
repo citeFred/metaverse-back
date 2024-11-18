@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsEnum, IsDateString } from 'class-validator';
-import { CourseRegistrationStatus } from 'src/enums/course-registration-status.enum';
+import { ClassRegistrationStatus } from 'src/enums/class-registration-status.enum';
 
 export class CreateProjectRegistrationDto {
 
@@ -8,6 +8,6 @@ export class CreateProjectRegistrationDto {
     reporting_date: string;
 
     @IsNotEmpty()
-    @IsEnum(CourseRegistrationStatus)
-    registration_status: CourseRegistrationStatus;
+    @IsEnum(ClassRegistrationStatus)
+    registration_status: ClassRegistrationStatus;
 }

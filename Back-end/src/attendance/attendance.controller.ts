@@ -11,14 +11,14 @@ export class AttendanceController {
     constructor(private readonly attendanceService: AttendanceService) {}
 
     //난수 발생
-    @Post('generate-code/:courseId')
+    @Post('generate-code/:classId')
     async generateAttendanceCode(
-        @Param('courseId') courseId: number,
+        @Param('classId') classId: number,
     ): Promise<{ randomCode: string }> {
         const randomCode = AttendanceController.generateRandomCode(); // 하나의 난수 생성
 
         // 모든 approved인 학생에 대한 출석 기록 생성
-        await this.attendanceService.createAttendanceForApprovedStudents(courseId, randomCode); 
+        await this.attendanceService.createAttendanceForApprovedStudents(classId, randomCode); 
 
         return { randomCode }; // 생성된 난수 반환
     }
@@ -29,7 +29,7 @@ export class AttendanceController {
         @Req() request
     ): Promise<boolean> {
         const userId = request.user.id; // 학생의 ID
-        return this.attendanceService.checkAttendance(body.courseId, userId, body.inputCode);
+        return this.attendanceService.checkAttendance(body.classId, userId, body.inputCode);
     }
 
     // 강사가 특정 학생의 출석 상태를 임의로 변경하는 메서드

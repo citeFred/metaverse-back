@@ -4,8 +4,8 @@ import { ProjectRegistration } from '../project/project_registration/entities/re
 import { Project } from '../project/projects/entities/project.entity';
 import { UserRole } from '../enums/user-role.enum';
 import { Exhibition } from '../exhibition/exhibitions/entities/exhibition.entity';
-import { Course } from 'src/course/courses/entities/course.entity';
-import { CourseRegistration } from 'src/course/course_registration/entities/course_registration.entity';
+import { Class } from 'src/class/classes/entities/class.entity';
+import { ClassRegistration } from 'src/class/class_registration/entities/class_registration.entity';
 import { Attendance } from 'src/attendance/entities/attendance.entity';
 
 @Entity()
@@ -33,9 +33,9 @@ export class User {
 
     user_role: UserRole; // Role 타입으로 변경
 
-    @ManyToMany(() => Course, course => course.user)
+    @ManyToMany(() => Class, classEntity => classEntity.user)
     @JoinTable()
-    course: Course[];
+    class: Class[];
 
     @OneToMany(() => Exhibition, exhibition => exhibition.user,{ cascade: true })
     exhibition: Exhibition[];
@@ -52,9 +52,9 @@ export class User {
     @OneToMany(() => ProjectRegistration, (project_registration) => project_registration.user)
     project_registrations: ProjectRegistration[];
 
-    // user - course_registration  연결 추가
-    @OneToMany(() => CourseRegistration, (course_registration) => course_registration.user)
-    course_registrations: CourseRegistration[];
+    // user - class_registration  연결 추가
+    @OneToMany(() => ClassRegistration, (class_registration) => class_registration.user)
+    class_registrations: ClassRegistration[];
 
     // 학생이 출석 기록을 가질 수 있는 관계 설정
     @OneToMany(() => Attendance, attendance => attendance.user)
